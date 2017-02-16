@@ -75,6 +75,7 @@
     <Compile Include="Service\App.cs" />
     <Compile Include="Service\ErrorEventLoggerTextWriter.cs" />
     <Compile Include="Service\EventLoggerTextWriter.cs" />
+    <Compile Include="Service\TimeMe.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

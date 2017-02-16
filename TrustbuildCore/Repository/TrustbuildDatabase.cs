@@ -19,14 +19,14 @@ namespace TrustbuildCore.Repository
 
         public string Name { get; set; }
 
-        //public DBProofTable _proof = null;
-        //public DBProofTable ProofTable
-        //{
-        //    get
-        //    {
-        //        return _proof ?? (_proof = new DBProofTable(Connection));
-        //    }
-        //}
+        public TrustTable _trust = null;
+        public TrustTable Trust
+        {
+            get
+            {
+                return _trust ?? (_trust = new TrustTable(Connection));
+            }
+        }
 
         //public DBBatchTable _batch = null;
         //public DBBatchTable BatchTable
@@ -52,6 +52,7 @@ namespace TrustbuildCore.Repository
             if (!IsMemoryDatabase && !File.Exists(Connection.FileName))
                 SQLiteConnection.CreateFile(Connection.FileName);
 
+            Trust.CreateIfNotExist();
             //ProofTable.CreateIfNotExist();
             //BatchTable.CreateIfNotExist();
         }
@@ -62,6 +63,8 @@ namespace TrustbuildCore.Repository
             {
                 Connection = new SQLiteConnection(MemoryConnectionString);
                 Connection.Open();
+                Connection.EnableExtensions(true);
+                Connection.LoadExtension("SQLite.Interop.dll", "sqlite3_json_init");
                 return Connection;
             }
 
