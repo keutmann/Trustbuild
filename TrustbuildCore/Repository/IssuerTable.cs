@@ -1,5 +1,5 @@
 ﻿using System.Data.SQLite;
-using TrustchainCore.Repository;
+using TrustchainCore.Data;
 
 namespace TrustbuildCore.Repository
 {

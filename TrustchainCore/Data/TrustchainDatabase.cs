@@ -5,7 +5,7 @@ using TrustchainCore.Configuration;
 using TrustchainCore.Extensions;
 
 
-namespace TrustchainCore.Repository
+namespace TrustchainCore.Data
 {
     public class TrustchainDatabase : IDisposable
     {

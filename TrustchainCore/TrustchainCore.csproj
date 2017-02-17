@@ -56,8 +56,8 @@
     <Compile Include="IO\ErrorEventLoggerTextWriter.cs" />
     <Compile Include="IO\EventLoggerTextWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\DBTable.cs" />
-    <Compile Include="Repository\TrustchainDatabase.cs" />
+    <Compile Include="Data\DBTable.cs" />
+    <Compile Include="Data\TrustchainDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

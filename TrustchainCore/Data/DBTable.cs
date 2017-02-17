@@ -2,7 +2,7 @@
 using System;
 using System.Data.SQLite;
 
-namespace TrustchainCore.Repository
+namespace TrustchainCore.Data
 {
     public class DBTable
     {

@@ -1,6 +1,6 @@
 ﻿using TrustbuildCore.Service;
 using TrustchainCore.Extensions;
-using TrustchainCore.Repository;
+using TrustchainCore.Data;
 
 namespace TrustbuildCore.Repository
 {
