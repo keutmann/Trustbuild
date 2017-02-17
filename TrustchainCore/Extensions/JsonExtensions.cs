@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 
-namespace TrustbuildCore.Extensions
+namespace TrustchainCore.Extensions
 {
     public static class JsonExtensions
     {

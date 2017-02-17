@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8EDF4429-251A-416D-BB68-93F227191BCF}</ProjectGuid>
+    <ProjectGuid>{D81F9786-23CC-4CD3-9720-3651625AD4F9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TrustbuildTest</RootNamespace>
-    <AssemblyName>TrustbuildTest</AssemblyName>
+    <RootNamespace>TrustchainCore</RootNamespace>
+    <AssemblyName>TrustchainCore</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
@@ -23,7 +22,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,47 +32,35 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NBitcoin, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\NBitcoin.3.0.2.4\lib\net45\NBitcoin.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="nunit.framework, Version=3.6.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.6.0\lib\net45\nunit.framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Data.SQLite, Version=1.0.104.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.104.0\lib\net46\System.Data.SQLite.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SetupFixture.cs" />
-    <Compile Include="BuildTest.cs" />
-    <Compile Include="TestBloomfilter.cs" />
+    <Compile Include="Configuration\App.cs" />
+    <Compile Include="Diagnostics\TimeMe.cs" />
+    <Compile Include="Extensions\JsonExtensions.cs" />
+    <Compile Include="IO\ErrorEventLoggerTextWriter.cs" />
+    <Compile Include="IO\EventLoggerTextWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestDBjson.cs" />
+    <Compile Include="Repository\DBTable.cs" />
+    <Compile Include="Repository\TrustchainDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TrustbuildCore\TrustbuildCore.csproj">
-      <Project>{768a6e1d-96ee-4cf4-8909-0d6e1df2e7ae}</Project>
-      <Name>TrustbuildCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TrustchainCore\TrustchainCore.csproj">
-      <Project>{d81f9786-23cc-4cd3-9720-3651625ad4f9}</Project>
-      <Name>TrustchainCore</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net46\System.Data.SQLite.Core.targets')" />

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace TrustbuildCore.Service
+namespace TrustchainCore.IO
 {
     public class ErrorEventLoggerTextWriter : EventLoggerTextWriter
     {

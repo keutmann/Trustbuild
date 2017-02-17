@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Topshelf;
 using TrustbuildCore.Service;
-using TrustbuildCore.Extensions;
+using TrustchainCore.Extensions;
 
 namespace TrustbuildServer
 {

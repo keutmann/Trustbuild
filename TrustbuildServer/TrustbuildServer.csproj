@@ -92,6 +92,10 @@
       <Project>{768a6e1d-96ee-4cf4-8909-0d6e1df2e7ae}</Project>
       <Name>TrustbuildCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TrustchainCore\TrustchainCore.csproj">
+      <Project>{d81f9786-23cc-4cd3-9720-3651625ad4f9}</Project>
+      <Name>TrustchainCore</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

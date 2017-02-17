@@ -5,9 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace TrustbuildCore.Service
+namespace TrustchainCore.IO
 {
     public class EventLoggerTextWriter : TextWriter
     {
