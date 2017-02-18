@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Diagnostics;
-using TrustbuildCore.Repository;
+using TrustchainCore.Data;
 using TrustbuildCore.Service;
 
 namespace TrustbuildTest

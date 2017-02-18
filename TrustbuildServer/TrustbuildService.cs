@@ -6,8 +6,8 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Web.Http;
-using TrustbuildCore.Repository;
 using TrustbuildCore.Service;
+using TrustchainCore.Data;
 using TrustchainCore.Extensions;
 
 
@@ -40,7 +40,7 @@ namespace TrustbuildServer
             var url = "http://" + App.Config["endpoint"] + ":" + App.Config["port"]+ "/";
             _webApp = WebApp.Start<StartOwin>(url);
 
-            using (var db = TrustbuildDatabase.Open())
+            using (var db = TrustchainDatabase.Open())
             {
                 db.CreateIfNotExist();
             }

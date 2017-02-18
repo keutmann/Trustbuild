@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TrustchainCore.Data;
 
-namespace TrustbuildCore.Repository
+namespace TrustchainCore.Data
 {
     public class SubjectTable : DBTable
     {
@@ -24,23 +24,21 @@ namespace TrustbuildCore.Repository
 
             var  sql = "CREATE TABLE IF NOT EXISTS " + TableName + " " +
                 "(" +
-                "issuerrowid INTEGER," +
+                "issuerid BLOB," +
                 "id BLOB," +
                 "signature BLOB,"+
                 "index INTEGER," +
                 "idtype TEXT,"+
-                "claimtype TEXT," +
                 "claim TEXT," +
                 "cost INTEGER," +
-                "activate INTEGER," +
-                "expire INTEGER," +
-                "scopetype TEXT," +
+                "activate DATETIME," +
+                "expire DATETIME," +
                 "scope TEXT" +
                 ")";
             var command = new SQLiteCommand(sql, Connection);
             command.ExecuteNonQuery();
 
-            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustIssuerRowId ON " + TableName + " (issuerrowid)", Connection);
+            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustIssuerRowId ON " + TableName + " (issuerid)", Connection);
             command.ExecuteNonQuery();
             command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustSubjectId ON " + TableName + " (id)", Connection);
             command.ExecuteNonQuery();

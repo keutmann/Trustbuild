@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using TrustbuildCore.Repository;
+using TrustchainCore.Data;
 using TrustchainCore.Service;
 
 namespace TrustbuildTest
@@ -12,7 +12,7 @@ namespace TrustbuildTest
         [Test]
         public void TestJSON()
         {
-            using (var db = TrustbuildDatabase.Open())
+            using (var db = TrustchainDatabase.Open())
             {
                 var itemsCount = 20000;
                 var name = "Carsten";

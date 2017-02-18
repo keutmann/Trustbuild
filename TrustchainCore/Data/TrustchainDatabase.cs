@@ -19,6 +19,17 @@ namespace TrustchainCore.Data
 
         public string Name { get; set; }
 
+
+        public TrustTable _trust = null;
+        public TrustTable Trust
+        {
+            get
+            {
+                return _trust ?? (_trust = new TrustTable(Connection));
+            }
+        }
+
+
         public TrustchainDatabase()
         {
         }
@@ -33,6 +44,8 @@ namespace TrustchainCore.Data
         {
             if (!IsMemoryDatabase && !File.Exists(Connection.FileName))
                 SQLiteConnection.CreateFile(Connection.FileName);
+
+            Trust.CreateIfNotExist();
         }
 
         public virtual SQLiteConnection OpenConnection()
@@ -84,6 +97,34 @@ namespace TrustchainCore.Data
             throw new ApplicationException("Not database connection found");
         }
 
+        public static TrustchainDatabase Open()
+        {
+            if (App.Config["test"].ToBoolean())
+                IsMemoryDatabase = true;
+
+            if (IsMemoryDatabase)
+            {
+                if (MemoryDatabase == null)
+                {
+                    lock (lockObject)
+                    {
+                        if (MemoryDatabase == null)
+                        {
+                            MemoryDatabase = new TrustchainDatabase();
+                            MemoryDatabase.OpenConnection();
+                            MemoryDatabase.CreateIfNotExist();
+                        }
+                    }
+                }
+                return MemoryDatabase;
+            }
+            else
+            {
+                var db = new TrustchainDatabase();
+                db.OpenConnection();
+                return db;
+            }
+        }
 
         public virtual void Dispose()
         {

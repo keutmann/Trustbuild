@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TrustchainCore.Data;
 
-namespace TrustbuildCore.Repository
+namespace TrustchainCore.Data
 {
     public class TrustTable : DBTable
     {
@@ -24,12 +24,13 @@ namespace TrustbuildCore.Repository
 
             var  sql = "CREATE TABLE IF NOT EXISTS " + TableName + " " +
                 "(" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "issuerid BLOB," +
+                "issuersignature BLOB," +
                 "serverid BLOB," +
                 "serversignature BLOB,"+
                 "timestamp TEXT,"+
-                "name TEXT,"+
-                "trustdata JSON"+
+                //"name TEXT,"+
+                //"trustdata JSON"+
                 ")";
             var command = new SQLiteCommand(sql, Connection);
             command.ExecuteNonQuery();

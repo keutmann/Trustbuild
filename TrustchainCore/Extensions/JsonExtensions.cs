@@ -98,6 +98,21 @@ namespace TrustchainCore.Extensions
             return defaultValue;
         }
 
+        public static byte[] ToBytes(this JToken token)
+        {
+            var defaultValue = new byte[0];
+            if (token == null)
+                return defaultValue;
+
+            if (token.Type == JTokenType.Null)
+                return defaultValue;
+
+            if (token.Type == JTokenType.Bytes)
+                return (byte[])token;
+
+            return defaultValue;
+        }
+
         public static DateTime ToDateTime(this JToken token, DateTime defaultValue)
         {
             if (token == null)

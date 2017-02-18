@@ -53,6 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\TrustProofTest.cs" />
     <Compile Include="SetupFixture.cs" />
     <Compile Include="BuildTest.cs" />
     <Compile Include="TestBloomfilter.cs" />

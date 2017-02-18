@@ -1,10 +1,5 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TrustbuildCore.Repository;
+using TrustchainCore.Data;
 
 namespace TrustbuildTest
 {
@@ -13,7 +8,7 @@ namespace TrustbuildTest
         [SetUp]
         public virtual void Init()
         {
-            using (var db = TrustbuildDatabase.Open())
+            using (var db = TrustchainDatabase.Open())
             {
                 db.CreateIfNotExist();
             }
