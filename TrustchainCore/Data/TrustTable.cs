@@ -5,7 +5,8 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TrustchainCore.Data;
+using TrustchainCore.Extensions;
+using TrustchainCore.Model;
 
 namespace TrustchainCore.Data
 {
@@ -29,115 +30,39 @@ namespace TrustchainCore.Data
                 "serverid BLOB," +
                 "serversignature BLOB,"+
                 "timestamp TEXT,"+
-                //"name TEXT,"+
-                //"trustdata JSON"+
                 ")";
             var command = new SQLiteCommand(sql, Connection);
             command.ExecuteNonQuery();
 
-            //command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustName ON Trust (name)", Connection);
-            //command.ExecuteNonQuery();
-
-            //command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustJSON ON Trust (json_extract(trustdata, '$.name'))", Connection);
-            //command.ExecuteNonQuery();
-
-            //command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustNickJSON ON Trust (json_tree(trustdata, '$.subname')) WHERE json_tree.key='nick'", Connection);
-            //command.ExecuteNonQuery();
-            //CREATE INDEX json_tbl_idx on json_tbl(json_extract(json, '$.value'))
+            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustIssuerId ON Trust (issuerid)", Connection);
+            command.ExecuteNonQuery();
         }
 
-        public int Add(string name, JToken data)
+        public int Add(Trust trust)
         {
-            var command = new SQLiteCommand("INSERT INTO Trust (name, trustdata) VALUES (@name, @trustdata)", Connection);
-            command.Parameters.Add(new SQLiteParameter("@name", name));
-            command.Parameters.Add(new SQLiteParameter("@trustdata", data.ToString()));
+            var command = new SQLiteCommand("INSERT INTO Trust (issuerid, issuersignature, serverid, serversignature, timestamp) VALUES (@issuerid, @issuersignature, @serverid, @serversignature, @timestamp)", Connection);
+            command.Parameters.Add(new SQLiteParameter("@issuerid", trust.Issuer.Id));
+            command.Parameters.Add(new SQLiteParameter("@issuersignature", trust.Signature.Issuer));
+            command.Parameters.Add(new SQLiteParameter("@serverid", trust.Server.Id));
+            command.Parameters.Add(new SQLiteParameter("@serversignature", trust.Signature.Server));
+            command.Parameters.Add(new SQLiteParameter("@timestamp", trust.Timestamp.SerializeObject()));
             return command.ExecuteNonQuery();
         }
 
 
-        //public int Add(JObject proof)
-        //{
-        //    var command = new SQLiteCommand("INSERT INTO Trust (serverid, serversignature, timestamp, trust) VALUES (@serverid,@serversignature,@timestamp,@trust)", Connection);
-        //    command.Parameters.Add(new SQLiteParameter("@hash", GetByteArray(proof["hash"])));
-        //    command.Parameters.Add(new SQLiteParameter("@path", GetByteArray(proof["path"])));
-        //    command.Parameters.Add(new SQLiteParameter("@partition", proof["partition"]));
-        //    command.Parameters.Add(new SQLiteParameter("@timestamp", (DateTime)proof["timestamp"]));
-        //    return command.ExecuteNonQuery();
-        //}
-
-        public JArray SelectSQL()
+        public Trust Select(byte[] issuerId)
         {
-            var command = new SQLiteCommand("SELECT * FROM Trust", Connection);
-            //command.Parameters.Add(new SQLiteParameter("@count", count));
-            SQLiteDataReader reader = command.ExecuteReader();
-            if (reader.Read()) {
-                var data = reader["trustdata"].ToString();
-                return JArray.Parse(data);
-               }
-            return null;
+            var command = new SQLiteCommand("SELECT * FROM Trust where issuerid = @issuerid", Connection);
+            command.Parameters.Add(new SQLiteParameter("@issuerid", issuerId));
+
+            return Query<Trust>(command, NewItem).FirstOrDefault();
         }
-
-        public object SelectJSON(string name)
-        {
-            var command = new SQLiteCommand("SELECT json_extract(Trust.trustdata, '$') FROM Trust where json_extract(Trust.trustdata, '$.name') = '" + name + "'", Connection);
-            //var command = new SQLiteCommand("SELECT json_extract(Trust.trustdata, '$') FROM Trust", Connection);
-            //command.Parameters.Add(new SQLiteParameter("@count", count));
-            var test = command.ExecuteScalar();
-            return test;
-
-        }
-
-
-        public object SelectSubJSON(string name)
-        {
-            var command = new SQLiteCommand("SELECT json_extract(Trust.trustdata, '$') FROM Trust, json_tree(Trust.trustdata, '$.subname') WHERE json_tree.key='nick' and json_tree.value = '" + name + "'", Connection);
-            //var command = new SQLiteCommand("SELECT json_extract(Trust.trustdata, '$') FROM Trust", Connection);
-            //command.Parameters.Add(new SQLiteParameter("@count", count));
-            var test = command.ExecuteScalar();
-            return test;
-
-        }
-        public object SelectSQL(string name)
-        {
-            var command = new SQLiteCommand("SELECT trustdata FROM Trust where name = '" + name + "'", Connection);
-            //var command = new SQLiteCommand("SELECT json_extract(Trust.trustdata, '$') FROM Trust", Connection);
-            //command.Parameters.Add(new SQLiteParameter("@count", count));
-            var test = command.ExecuteScalar();
-            return test;
-            //SQLiteDataReader reader = command.ExecuteReader();
-            //if (reader.Read())
-            //{
-            //    var data = reader[0].ToString();
-            //    return JArray.Parse(data);
-            //}
-            //return null;
-        }
-
-        //public int UpdatePath(JObject proof)
-        //{
-        //    return UpdatePath(GetByteArray(proof["hash"]), GetByteArray(proof["path"]));
-        //}
-
-        //public int UpdatePath(byte[] hash, byte[] path)
-        //{
-        //    var command = new SQLiteCommand("UPDATE Proof SET path = @path WHERE hash = @hash", Connection);
-        //    command.Parameters.Add(new SQLiteParameter("@hash", hash));
-        //    command.Parameters.Add(new SQLiteParameter("@path", path));
-        //    return command.ExecuteNonQuery();
-        //}
 
         //public JObject GetByHash(byte[] hash)
         //{
         //    var command = new SQLiteCommand("select * from Proof where hash = @hash LIMIT 1", Connection);
         //    command.Parameters.Add(new SQLiteParameter("@hash", hash));
         //    return (JObject)Query(command, NewItem).FirstOrDefault();
-        //}
-
-        //public int Count()
-        //{
-        //    var command = new SQLiteCommand("SELECT count(*) FROM Proof", Connection);
-        //    var result = Query(command, (reader) => new JObject(new JProperty("count", reader[0]))).FirstOrDefault();
-        //    return (int)result["count"];
         //}
 
         ///// <summary>
@@ -168,10 +93,27 @@ namespace TrustchainCore.Data
         //    command.ExecuteNonQuery();
         //}
 
-        //public JObject NewItem(SQLiteDataReader reader)
-        //{
-        //    return NewItem(reader["hash"], reader["path"], reader["partition"], reader["timestamp"]);
-        //}
+        public Trust NewItem(SQLiteDataReader reader)
+        {
+            return new Trust
+            {
+                Issuer = new Issuer
+                {
+                    Id = (byte[])reader["issuerid"],
+                },
+                Server = new Server
+                {
+                    Id = (byte[])reader["serverid"]
+                },
+                Timestamp = ((string)reader["timestamp"]).DeserializeObject<Timestamp[]>(),
+                Signature = new Signature
+                {
+                    Issuer = (byte[])reader["issuersignature"],
+                    Server = (byte[])reader["serversignature"],
+                }
+
+            };
+        }
 
 
         //public JObject NewItem(object trustdata)

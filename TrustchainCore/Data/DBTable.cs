@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Linq;
 
 namespace TrustchainCore.Data
 {
@@ -18,7 +20,19 @@ namespace TrustchainCore.Data
             return (reader.Read());
         }
 
-        public JArray Query(SQLiteCommand command, Func<SQLiteDataReader, JObject> newItemMethod = null)
+        public virtual IEnumerable<T> Query<T>(SQLiteCommand command, Func<SQLiteDataReader, T> newItemMethod = null)
+        {
+            if (newItemMethod == null)
+                throw new MissingMethodException("Missing newItemMethod");
+
+            var result = new List<T>();
+            SQLiteDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+                yield return newItemMethod(reader);
+        }
+
+
+        public virtual JArray Query(SQLiteCommand command, Func<SQLiteDataReader, JObject> newItemMethod = null)
         {
             if (newItemMethod == null)
                 throw new MissingMethodException("Missing newItemMethod");
@@ -34,6 +48,13 @@ namespace TrustchainCore.Data
         public byte[] GetByteArray(JToken token)
         {
             return token.Type == JTokenType.Null ? new byte[0] : (byte[])token;
+        }
+
+        public virtual int Count()
+        {
+            var command = new SQLiteCommand("SELECT count(*) FROM " + TableName, Connection);
+            var result = Query(command, (reader) => new JObject(new JProperty("count", reader[0]))).FirstOrDefault();
+            return (int)result["count"];
         }
     }
 }

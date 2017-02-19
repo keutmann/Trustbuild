@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 
 namespace TrustchainCore.Extensions
@@ -42,7 +43,15 @@ namespace TrustchainCore.Extensions
             return (token[name] == null) ? (JObject)(token[name] = new JObject()) : (JObject)token[name];
         }
 
+        public static string SerializeObject(this object obj)
+        {
+            return JsonConvert.SerializeObject(obj, Formatting.None);
+        }
 
+        public static T DeserializeObject<T>(this string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
         //public static string CustomRender(this JToken token)
         //{
         //    var serializer = new JsonSerializer();

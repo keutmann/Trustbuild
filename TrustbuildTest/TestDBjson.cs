@@ -14,31 +14,31 @@ namespace TrustbuildTest
         {
             using (var db = TrustchainDatabase.Open())
             {
-                var itemsCount = 20000;
-                var name = "Carsten";
-                //var data = new JArray();
-                using (var timer = new TimeMe("Add data"))
-                {
+                //var itemsCount = 20000;
+                //var name = "Carsten";
+                ////var data = new JArray();
+                //using (var timer = new TimeMe("Add data"))
+                //{
 
 
-                    for (int i = 0; i < itemsCount; i++)
-                    {
-                        var key = name + i;
-                        var data = new JObject(
-                                 new JProperty("id", i),
-                                 new JProperty("name", key),
-                                 new JProperty("phone", "1234455454"),
-                                 new JProperty("subname",new JArray(
-                                     new JObject(new JProperty("nick", "Test" + i)),
-                                     new JObject(new JProperty("nick", "Hans" + i)),
-                                     new JObject(new JProperty("nick", "Oles" + i))
-                                     )
-                                 )
-                             );
+                //    for (int i = 0; i < itemsCount; i++)
+                //    {
+                //        var key = name + i;
+                //        var data = new JObject(
+                //                 new JProperty("id", i),
+                //                 new JProperty("name", key),
+                //                 new JProperty("phone", "1234455454"),
+                //                 new JProperty("subname",new JArray(
+                //                     new JObject(new JProperty("nick", "Test" + i)),
+                //                     new JObject(new JProperty("nick", "Hans" + i)),
+                //                     new JObject(new JProperty("nick", "Oles" + i))
+                //                     )
+                //                 )
+                //             );
 
-                        db.Trust.Add(key, data);
-                    }
-                }
+                //        db.Trust.Add(key, data);
+                //    }
+                //}
 
                 //using (var timer = new TimeMe("Sub JSON search"))
                 //{
