@@ -34,5 +34,14 @@ namespace TrustchainCore.Model
         [JsonProperty(PropertyName = "scope")]
         public string Scope { get; set; }
 
+        /// <summary>
+        /// Non serializeable
+        /// </summary>
+        public byte[] Signature { get; set; }
+
+        /// <summary>
+        /// Non serializeable
+        /// </summary>
+        public byte[] IssuerId { get; set; }
     }
 }

@@ -25,22 +25,27 @@ namespace TrustchainCore.Data
 
             var  sql = "CREATE TABLE IF NOT EXISTS " + TableName + " " +
                 "(" +
+                "version TEXT,"+
+                "script TEXT,"+
                 "issuerid BLOB," +
                 "issuersignature BLOB," +
                 "serverid BLOB," +
                 "serversignature BLOB,"+
-                "timestamp TEXT,"+
+                "timestamp TEXT"+
                 ")";
             var command = new SQLiteCommand(sql, Connection);
             command.ExecuteNonQuery();
 
-            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustIssuerId ON Trust (issuerid)", Connection);
+            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS " + TableName+ "IssuerId ON " + TableName + " (issuerid)", Connection);
             command.ExecuteNonQuery();
         }
 
         public int Add(Trust trust)
         {
-            var command = new SQLiteCommand("INSERT INTO Trust (issuerid, issuersignature, serverid, serversignature, timestamp) VALUES (@issuerid, @issuersignature, @serverid, @serversignature, @timestamp)", Connection);
+            var command = new SQLiteCommand("INSERT INTO " + TableName + " (version, script, issuerid, issuersignature, serverid, serversignature, timestamp) "+ 
+                "VALUES (@version, @script, @issuerid, @issuersignature, @serverid, @serversignature, @timestamp)", Connection);
+            command.Parameters.Add(new SQLiteParameter("@version", trust.Head.Version));
+            command.Parameters.Add(new SQLiteParameter("@script", trust.Head.Script));
             command.Parameters.Add(new SQLiteParameter("@issuerid", trust.Issuer.Id));
             command.Parameters.Add(new SQLiteParameter("@issuersignature", trust.Signature.Issuer));
             command.Parameters.Add(new SQLiteParameter("@serverid", trust.Server.Id));
@@ -49,54 +54,23 @@ namespace TrustchainCore.Data
             return command.ExecuteNonQuery();
         }
 
-
         public Trust Select(byte[] issuerId)
         {
-            var command = new SQLiteCommand("SELECT * FROM Trust where issuerid = @issuerid", Connection);
+            var command = new SQLiteCommand("SELECT * FROM " + TableName + " where issuerid = @issuerid", Connection);
             command.Parameters.Add(new SQLiteParameter("@issuerid", issuerId));
 
             return Query<Trust>(command, NewItem).FirstOrDefault();
         }
 
-        //public JObject GetByHash(byte[] hash)
-        //{
-        //    var command = new SQLiteCommand("select * from Proof where hash = @hash LIMIT 1", Connection);
-        //    command.Parameters.Add(new SQLiteParameter("@hash", hash));
-        //    return (JObject)Query(command, NewItem).FirstOrDefault();
-        //}
-
-        ///// <summary>
-        ///// Get all batch codes where the proofs has not been build yet. 
-        ///// Excluding the currrent batch.
-        ///// </summary>
-        ///// <param name="excludePartition"></param>
-        ///// <returns></returns>
-        //public JArray GetUnprocessedPartitions(string excludePartition)
-        //{
-        //    var command = new SQLiteCommand("SELECT DISTINCT partition FROM Proof WHERE (path IS NULL or path = @path) and partition != @partition ORDER BY partition", Connection);
-        //    command.Parameters.Add(new SQLiteParameter("@partition", excludePartition));
-        //    command.Parameters.Add(new SQLiteParameter("@path", new byte[0]));
-
-        //    return Query(command, (reader) => new JObject(new JProperty("partition", reader["partition"])));
-        //}
-
-        //public JArray GetByPartition(string partition)
-        //{
-        //    var command = new SQLiteCommand("SELECT * FROM Proof WHERE partition = @partition", Connection);
-        //    command.Parameters.Add(new SQLiteParameter("@partition", partition));
-        //    return Query(command, NewItem);
-        //}
-
-        //public void DropTable()
-        //{
-        //    var command = new SQLiteCommand("DROP TABLE Proof", Connection);
-        //    command.ExecuteNonQuery();
-        //}
-
         public Trust NewItem(SQLiteDataReader reader)
         {
             return new Trust
             {
+                Head = new Head
+                {
+                    Version = (string)reader["version"],
+                    Script = (string)reader["script"]
+                },
                 Issuer = new Issuer
                 {
                     Id = (byte[])reader["issuerid"],
@@ -114,15 +88,5 @@ namespace TrustchainCore.Data
 
             };
         }
-
-
-        //public JObject NewItem(object trustdata)
-        //{
-        //    return new JObject(
-        //        new JProperty("trustdata", trustdata)
-        //        );
-        //}
-
-
     }
 }

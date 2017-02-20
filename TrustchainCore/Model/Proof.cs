@@ -13,7 +13,7 @@ namespace TrustchainCore.Model
         [JsonProperty(PropertyName = "index")]
         public int Index { get; set; }
 
-        [JsonProperty(PropertyName = "sig")]
+        [JsonProperty(PropertyName = "proof")]
         public byte[] Sig { get; set; }
 
     }

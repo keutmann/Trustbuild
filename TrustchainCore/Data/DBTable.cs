@@ -25,10 +25,11 @@ namespace TrustchainCore.Data
             if (newItemMethod == null)
                 throw new MissingMethodException("Missing newItemMethod");
 
-            var result = new List<T>();
-            SQLiteDataReader reader = command.ExecuteReader();
+            var reader = command.ExecuteReader();
+            var list = new List<T>();
             while (reader.Read())
-                yield return newItemMethod(reader);
+                list.Add(newItemMethod(reader));
+            return list;
         }
 
 
@@ -55,6 +56,12 @@ namespace TrustchainCore.Data
             var command = new SQLiteCommand("SELECT count(*) FROM " + TableName, Connection);
             var result = Query(command, (reader) => new JObject(new JProperty("count", reader[0]))).FirstOrDefault();
             return (int)result["count"];
+        }
+
+        public void DropTable()
+        {
+            var command = new SQLiteCommand("DROP TABLE " + TableName, Connection);
+            command.ExecuteNonQuery();
         }
     }
 }

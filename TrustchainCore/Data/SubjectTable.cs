@@ -5,7 +5,8 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TrustchainCore.Data;
+using TrustchainCore.Extensions;
+using TrustchainCore.Model;
 
 namespace TrustchainCore.Data
 {
@@ -27,7 +28,6 @@ namespace TrustchainCore.Data
                 "issuerid BLOB," +
                 "id BLOB," +
                 "signature BLOB,"+
-                "index INTEGER," +
                 "idtype TEXT,"+
                 "claim TEXT," +
                 "cost INTEGER," +
@@ -38,7 +38,7 @@ namespace TrustchainCore.Data
             var command = new SQLiteCommand(sql, Connection);
             command.ExecuteNonQuery();
 
-            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustIssuerRowId ON " + TableName + " (issuerid)", Connection);
+            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustSubjectIssuerId ON " + TableName + " (issuerid)", Connection);
             command.ExecuteNonQuery();
             command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustSubjectId ON " + TableName + " (id)", Connection);
             command.ExecuteNonQuery();
@@ -48,95 +48,46 @@ namespace TrustchainCore.Data
             command.ExecuteNonQuery();
         }
 
-        /*
-                public int Add(JObject proof)
-                {
-                    var command = new SQLiteCommand("INSERT INTO Proof (hash, path, partition, timestamp) VALUES (@hash,@path,@partition,@timestamp)", Connection);
-                    command.Parameters.Add(new SQLiteParameter("@hash", GetByteArray(proof["hash"])));
-                    command.Parameters.Add(new SQLiteParameter("@path", GetByteArray(proof["path"])));
-                    command.Parameters.Add(new SQLiteParameter("@partition", proof["partition"]));
-                    command.Parameters.Add(new SQLiteParameter("@timestamp", (DateTime)proof["timestamp"]));
-                    return command.ExecuteNonQuery();
-                }
+        public int Add(Subject subject)
+        {
+            var command = new SQLiteCommand("INSERT INTO " + TableName + " (issuerid, id, signature, idtype, claim, cost, activate, expire, scope) "+
+                "VALUES (@issuerid, @id, @signature, @idtype, @claim, @cost, @activate, @expire, @scope)", Connection);
 
-                public JArray Select(int count)
-                {
-                    var command = new SQLiteCommand("SELECT * FROM Proof ORDER BY partition DESC LIMIT @count", Connection);
-                    command.Parameters.Add(new SQLiteParameter("@count", count));
-                    return Query(command, NewItem);
-                }
+            command.Parameters.Add(new SQLiteParameter("@issuerid", subject.IssuerId));
+            command.Parameters.Add(new SQLiteParameter("@id", subject.Id));
+            command.Parameters.Add(new SQLiteParameter("@signature", subject.Signature));
+            command.Parameters.Add(new SQLiteParameter("@idtype", subject.IdType));
+            command.Parameters.Add(new SQLiteParameter("@claim", subject.Claims.SerializeObject()));
+            command.Parameters.Add(new SQLiteParameter("@cost", subject.Cost));
+            command.Parameters.Add(new SQLiteParameter("@activate", subject.Activate));
+            command.Parameters.Add(new SQLiteParameter("@expire", subject.Expire));
+            command.Parameters.Add(new SQLiteParameter("@scope", subject.Scope));
+            return command.ExecuteNonQuery();
+        }
 
-                public int UpdatePath(JObject proof)
-                {
-                    return UpdatePath(GetByteArray(proof["hash"]), GetByteArray(proof["path"]));
-                }
+        public IEnumerable<Subject> Select(byte[] issuerId)
+        {
+            var command = new SQLiteCommand("SELECT * FROM " + TableName + " where issuerid = @issuerid", Connection);
+            command.Parameters.Add(new SQLiteParameter("@issuerid", issuerId));
 
-                public int UpdatePath(byte[] hash, byte[] path)
-                {
-                    var command = new SQLiteCommand("UPDATE Proof SET path = @path WHERE hash = @hash", Connection);
-                    command.Parameters.Add(new SQLiteParameter("@hash", hash));
-                    command.Parameters.Add(new SQLiteParameter("@path", path));
-                    return command.ExecuteNonQuery();
-                }
+            return Query<Subject>(command, NewItem);
+        }
 
-                public JObject GetByHash(byte[] hash)
-                {
-                    var command = new SQLiteCommand("select * from Proof where hash = @hash LIMIT 1", Connection);
-                    command.Parameters.Add(new SQLiteParameter("@hash", hash));
-                    return (JObject)Query(command, NewItem).FirstOrDefault();
-                }
-
-                public int Count()
-                {
-                    var command = new SQLiteCommand("SELECT count(*) FROM Proof", Connection);
-                    var result = Query(command, (reader) => new JObject(new JProperty("count", reader[0]))).FirstOrDefault();
-                    return (int)result["count"];
-                }
-
-                /// <summary>
-                /// Get all batch codes where the proofs has not been build yet. 
-                /// Excluding the currrent batch.
-                /// </summary>
-                /// <param name="excludePartition"></param>
-                /// <returns></returns>
-                public JArray GetUnprocessedPartitions(string excludePartition)
-                {
-                    var command = new SQLiteCommand("SELECT DISTINCT partition FROM Proof WHERE (path IS NULL or path = @path) and partition != @partition ORDER BY partition", Connection);
-                    command.Parameters.Add(new SQLiteParameter("@partition", excludePartition));
-                    command.Parameters.Add(new SQLiteParameter("@path", new byte[0]));
-
-                    return Query(command, (reader) => new JObject(new JProperty("partition", reader["partition"])));
-                }
-
-                public JArray GetByPartition(string partition)
-                {
-                    var command = new SQLiteCommand("SELECT * FROM Proof WHERE partition = @partition", Connection);
-                    command.Parameters.Add(new SQLiteParameter("@partition", partition));
-                    return Query(command, NewItem);
-                }
-
-                public void DropTable()
-                {
-                    var command = new SQLiteCommand("DROP TABLE Proof", Connection);
-                    command.ExecuteNonQuery();
-                }
-
-                public JObject NewItem(SQLiteDataReader reader)
-                {
-                    return NewItem(reader["hash"], reader["path"], reader["partition"], reader["timestamp"]);
-                }
-
-
-                public JObject NewItem(object hash, object path = null, object partition = null, object timestamp = null)
-                {
-                    return new JObject(
-                        new JProperty("hash", hash),
-                        new JProperty("path", path),
-                        new JProperty("partition", partition),
-                        new JProperty("timestamp", timestamp)
-                        );
-                }
-                */
-
+        public Subject NewItem(SQLiteDataReader reader)
+        {
+            return new Subject
+            {
+                IssuerId = (byte[])reader["issuerid"],
+                Index = -1,
+                Id = (byte[])reader["id"],
+                Signature = (byte[])reader["signature"],
+                IdType = (string)reader["idtype"],
+                Claims = reader.GetString(4).DeserializeObject<Claim[]>(),
+                Cost = reader.GetInt32(5),
+                Activate = reader.GetDateTime(6),
+                Expire = reader.GetDateTime(7),
+                Scope = (string)reader["scope"]
+            };
+        }
     }
 }
