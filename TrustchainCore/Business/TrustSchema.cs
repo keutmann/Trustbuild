@@ -29,6 +29,9 @@ namespace TrustchainCore.Business
             if (trust.Issuer.Id == null || trust.Issuer.Id.Length == 0)
                 Errors.Add("Missing issuer id");
 
+            //if (trust.Issuer.Signature == null)
+            //    Errors.Add("Missing issuer signature");
+
             if (trust.Issuer.Subjects == null || trust.Issuer.Subjects.Length == 0)
                 Errors.Add("Missing subject");
 
@@ -39,12 +42,6 @@ namespace TrustchainCore.Business
                     Errors.Add("Missing subject id at index: "+index);
                 index++;
             }
-
-            if (trust.Signature == null)
-                Errors.Add("Missing signature");
-
-            if (trust.Signature.Issuer == null || trust.Signature.Issuer.Length == 0)
-                Errors.Add("Missing issuer signature");
 
             return Errors.Count == 0;
         }

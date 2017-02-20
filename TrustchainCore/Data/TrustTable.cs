@@ -47,9 +47,9 @@ namespace TrustchainCore.Data
             command.Parameters.Add(new SQLiteParameter("@version", trust.Head.Version));
             command.Parameters.Add(new SQLiteParameter("@script", trust.Head.Script));
             command.Parameters.Add(new SQLiteParameter("@issuerid", trust.Issuer.Id));
-            command.Parameters.Add(new SQLiteParameter("@issuersignature", trust.Signature.Issuer));
+            command.Parameters.Add(new SQLiteParameter("@issuersignature", trust.Issuer.Signature));
             command.Parameters.Add(new SQLiteParameter("@serverid", trust.Server.Id));
-            command.Parameters.Add(new SQLiteParameter("@serversignature", trust.Signature.Server));
+            command.Parameters.Add(new SQLiteParameter("@serversignature", trust.Server.Signature));
             command.Parameters.Add(new SQLiteParameter("@timestamp", trust.Timestamp.SerializeObject()));
             return command.ExecuteNonQuery();
         }
@@ -68,24 +68,20 @@ namespace TrustchainCore.Data
             {
                 Head = new Head
                 {
-                    Version = (string)reader["version"],
-                    Script = (string)reader["script"]
+                    Version = reader.GetString("version"),
+                    Script = reader.GetString("script")
                 },
                 Issuer = new Issuer
                 {
-                    Id = (byte[])reader["issuerid"],
+                    Id = reader.GetBytes("issuerid"),
+                    Signature = reader.GetBytes("issuersignature")
                 },
                 Server = new Server
                 {
-                    Id = (byte[])reader["serverid"]
+                    Id = reader.GetBytes("serverid"),
+                    Signature = reader.GetBytes("serversignature")
                 },
-                Timestamp = ((string)reader["timestamp"]).DeserializeObject<Timestamp[]>(),
-                Signature = new Signature
-                {
-                    Issuer = (byte[])reader["issuersignature"],
-                    Server = (byte[])reader["serversignature"],
-                }
-
+                Timestamp = reader.GetString("timestamp").DeserializeObject<Timestamp[]>()
             };
         }
     }

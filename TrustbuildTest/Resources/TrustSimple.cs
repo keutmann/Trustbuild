@@ -17,6 +17,7 @@ namespace TrustbuildTest.Resources
   ""issuer"": 
     {
       ""id"": ""z9+7gcKC3nbtUDd3r45Sr60nkS8="",
+      ""signature"" : ""H+ybXlrtsk5Pm+TbccEky/3FR2bWWsBVUlI7RdZGicEPTI32pUFN30RGNiU9U3I1uXpMTSeKy8krgSfHdvxMnzA="",
       ""subject"": [
         {
           ""index"": 0,
@@ -40,7 +41,8 @@ namespace TrustbuildTest.Resources
     }
   ,
   ""server"": {
-    ""id"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz""
+    ""id"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz"",
+      ""signature"" : ""H+ybXlrtsk5Pm+TbccEky/3FR2bWWsBVUlI7RdZGicEPTI32pUFN30RGNiU9U3I1uXpMTSeKy8krgSfHdvxMnzA="",
   },
   ""timestamp"": [
     {
@@ -53,17 +55,7 @@ namespace TrustbuildTest.Resources
       ""hash"": ""SHA3"", 
       ""path"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz""
     }
-  ],
-  ""signature"": {
-    ""server"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz"",
-    ""issuer"": ""H+ybXlrtsk5Pm+TbccEky/3FR2bWWsBVUlI7RdZGicEPTI32pUFN30RGNiU9U3I1uXpMTSeKy8krgSfHdvxMnzA="",
-    ""subject"": [
-        {
-        ""index"": 0,
-        ""proof"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz""
-        }
-    ]
-  }
+  ]
 }
 ";
     }

@@ -77,17 +77,20 @@ namespace TrustchainCore.Data
         {
             return new Subject
             {
-                IssuerId = (byte[])reader["issuerid"],
-                Index = -1,
-                Id = (byte[])reader["id"],
-                Signature = (byte[])reader["signature"],
-                IdType = (string)reader["idtype"],
-                Claims = reader.GetString(4).DeserializeObject<Claim[]>(),
+                IssuerId = reader.GetBytes("issuerid"),
+                Id = reader.GetBytes("id"),
+                Signature = reader.GetBytes("signature"),
+                IdType = reader.GetString("idtype"),
+                Claims = reader.GetString("claim").DeserializeObject<Claim[]>(),
                 Cost = reader.GetInt32(5),
                 Activate = reader.GetDateTime(6),
                 Expire = reader.GetDateTime(7),
-                Scope = (string)reader["scope"]
+                Scope = reader.GetString("scope")
             };
         }
+
+
+
     }
+   
 }

@@ -70,14 +70,13 @@
     <Compile Include="Extensions\EncoderExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\MemoryStreamExtensions.cs" />
+    <Compile Include="Extensions\SQLiteDataReaderExtensions.cs" />
     <Compile Include="IO\ErrorEventLoggerTextWriter.cs" />
     <Compile Include="IO\EventLoggerTextWriter.cs" />
     <Compile Include="Model\Claim.cs" />
     <Compile Include="Model\Head.cs" />
     <Compile Include="Model\Issuer.cs" />
-    <Compile Include="Model\Proof.cs" />
     <Compile Include="Model\Server.cs" />
-    <Compile Include="Model\Signature.cs" />
     <Compile Include="Model\Subject.cs" />
     <Compile Include="Model\Timestamp.cs" />
     <Compile Include="Model\Trust.cs" />

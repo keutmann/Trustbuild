@@ -52,8 +52,8 @@ namespace TrustbuildTest.Data
             var hashkeyid = Hashes.Hash256(Hashes.SHA256(trustBinary.GetIssuerBinary()));
             //var hashkeyid2 = new uint256(Hashes.Hash256(trustBinary.GetIssuerBinary()));
             //var signature = key32.SignCompact(hashkeyid);
-            trust.Signature.Issuer = key32.SignCompact(hashkeyid);
-            Console.WriteLine("Issuer signature: "+Convert.ToBase64String(trust.Signature.Issuer));
+            trust.Issuer.Signature = key32.SignCompact(hashkeyid);
+            Console.WriteLine("Issuer signature: "+Convert.ToBase64String(trust.Issuer.Signature));
 
             //var recoverAdr = PubKey.RecoverCompact(hashkeyid, trust.Signature.Issuer);
             //bool result = recoverAdr.Hash.ToBytes().Compare(trust.Issuer.Id) == 0; // == adr32.Hash;

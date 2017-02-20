@@ -26,8 +26,8 @@ namespace TrustbuildTest.Data
 
                 var result = db.Trust.Select(trust.Issuer.Id);
                 Assert.IsNotNull(result);
-                Assert.AreEqual(trust.Signature.Issuer, result.Signature.Issuer);
-                Assert.AreEqual(trust.Signature.Server, result.Signature.Server);
+                Assert.AreEqual(trust.Issuer.Signature, result.Issuer.Signature);
+                Assert.AreEqual(trust.Server.Signature, result.Server.Signature);
                 Assert.AreEqual(trust.Server.Id, result.Server.Id);
                 Assert.AreEqual(trust.Timestamp.Count(), result.Timestamp.Count());
             }

@@ -10,14 +10,20 @@ namespace TrustchainCore.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class Subject
     {
-        [JsonProperty(PropertyName = "index")]
-        public int Index { get; set; }
-
+        /// <summary>
+        /// Subject target id
+        /// </summary>
         [JsonProperty(PropertyName = "id")]
         public byte[] Id { get; set; }
 
         [JsonProperty(PropertyName = "idtype")]
         public string IdType { get; set; }
+
+        /// <summary>
+        /// Not included in the Binary payload for signature verification!
+        /// </summary>
+        [JsonProperty(PropertyName = "signature")]
+        public byte[] Signature { get; set; }
 
         [JsonProperty(PropertyName = "claim")]
         public Claim[] Claims { get; set; }
@@ -36,17 +42,8 @@ namespace TrustchainCore.Model
 
         /// <summary>
         /// Non serializeable
-        /// </summary>
-        public byte[] Signature { get; set; }
-
-        /// <summary>
-        /// Non serializeable
+        /// Not included in the Binary payload for signature verification!
         /// </summary>
         public byte[] IssuerId { get; set; }
-
-        public Subject()
-        {
-            Index = -1;
-        }
     }
 }

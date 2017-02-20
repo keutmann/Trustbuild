@@ -24,13 +24,13 @@ namespace TrustchainCore.Business
 
         public bool VerfifyIssuerSignature()
         {
-            if (trust.Signature.Issuer == null || trust.Signature.Issuer.Length == 0)
+            if (trust.Issuer.Signature == null || trust.Issuer.Signature.Length == 0)
                 return false;
 
             var hashkeyid = Hashes.Hash256(Hashes.SHA256(Binary.GetIssuerBinary()));
 
 
-            var recoverAddress = PubKey.RecoverCompact(hashkeyid, trust.Signature.Issuer);
+            var recoverAddress = PubKey.RecoverCompact(hashkeyid, trust.Issuer.Signature);
 
             return recoverAddress.Hash.ToBytes().Compare(trust.Issuer.Id) == 0;
         }

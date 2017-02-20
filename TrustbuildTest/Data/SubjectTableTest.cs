@@ -24,7 +24,6 @@ namespace TrustbuildTest.Data
                 foreach (var subject in trust.Issuer.Subjects)
                 {
                     subject.IssuerId = trust.Issuer.Id;
-                    subject.Signature = trust.Signature.Subject[subject.Index].Sig;
                     var addResult = db.Subject.Add(subject);
                     Assert.IsTrue(addResult > 0, "Subject was not added!");
                 }

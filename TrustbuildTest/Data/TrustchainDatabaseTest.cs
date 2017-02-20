@@ -26,12 +26,10 @@ namespace TrustbuildTest.Data
                 var result = db.GetTrust(trust.Issuer.Id);
 
                 Assert.IsNotNull(result);
-                Assert.AreEqual(trust.Signature.Issuer, result.Signature.Issuer);
-                Assert.AreEqual(trust.Signature.Server, result.Signature.Server);
+                Assert.AreEqual(trust.Issuer.Signature, result.Issuer.Signature);
+                Assert.AreEqual(trust.Server.Signature, result.Server.Signature);
                 Assert.AreEqual(trust.Server.Id, result.Server.Id);
                 Assert.AreEqual(trust.Timestamp.Count(), result.Timestamp.Count());
-                Assert.AreEqual(trust.Issuer.Subjects.Count(), result.Issuer.Subjects.Count());
-                Assert.AreEqual(trust.Signature.Subject.Count(), result.Signature.Subject.Count());
                 Console.WriteLine("----- Source ---");
                 Console.WriteLine(JsonConvert.SerializeObject(trust, Formatting.Indented));
                 Console.WriteLine("----- Result ---");

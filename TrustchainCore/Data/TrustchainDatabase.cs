@@ -146,7 +146,6 @@ namespace TrustchainCore.Data
             foreach (var subject in trust.Issuer.Subjects)
             {
                 subject.IssuerId = trust.Issuer.Id;
-                subject.Signature = trust.Signature.Subject[subject.Index].Sig;
                 result = Subject.Add(subject);
                 if (result < 1)
                     break;
@@ -159,14 +158,6 @@ namespace TrustchainCore.Data
             var result = Trust.Select(issuerid);
             var subjects = Subject.Select(issuerid);
             result.Issuer.Subjects = subjects.ToArray();
-
-            var index = 0;
-            result.Signature.Subject = (from p in subjects
-                                        select new Proof
-                                        {
-                                            Index = p.Index = index++,
-                                            Sig = p.Signature
-                                        }).ToArray();
             return result;
         }
 

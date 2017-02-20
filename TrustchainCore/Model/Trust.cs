@@ -16,8 +16,5 @@ namespace TrustchainCore.Model
 
         [JsonProperty(PropertyName = "timestamp")]
         public Timestamp[] Timestamp { get; set; }
-
-        [JsonProperty(PropertyName = "signature")]
-        public Signature Signature { get; set; }
     }
 }

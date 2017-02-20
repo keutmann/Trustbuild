@@ -12,5 +12,11 @@ namespace TrustchainCore.Model
     {
         [JsonProperty(PropertyName = "id")]
         public byte[] Id { get; set; }
+
+        /// <summary>
+        /// Not included in the Binary payload for signature verification!
+        /// </summary>
+        [JsonProperty(PropertyName = "signature")]
+        public byte[] Signature { get; set; }
     }
 }
