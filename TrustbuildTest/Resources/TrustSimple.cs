@@ -16,7 +16,7 @@ namespace TrustbuildTest.Resources
   },
   ""issuer"": 
     {
-      ""id"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz"",
+      ""id"": ""z9+7gcKC3nbtUDd3r45Sr60nkS8="",
       ""subject"": [
         {
           ""index"": 0,
@@ -56,7 +56,7 @@ namespace TrustbuildTest.Resources
   ],
   ""signature"": {
     ""server"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz"",
-    ""issuer"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz"",
+    ""issuer"": ""H+ybXlrtsk5Pm+TbccEky/3FR2bWWsBVUlI7RdZGicEPTI32pUFN30RGNiU9U3I1uXpMTSeKy8krgSfHdvxMnzA="",
     ""subject"": [
         {
         ""index"": 0,

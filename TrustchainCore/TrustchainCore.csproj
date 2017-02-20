@@ -52,14 +52,21 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="TrustTorrent, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Trustchain.TrustTorrent.1.0.0\lib\net45\TrustTorrent.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\ITrustBinary.cs" />
+    <Compile Include="Business\TrustSchema.cs" />
     <Compile Include="Configuration\App.cs" />
     <Compile Include="Data\SubjectTable.cs" />
-    <Compile Include="Data\TrustHash.cs" />
-    <Compile Include="Data\TrustSignature.cs" />
+    <Compile Include="Business\TrustBinary.cs" />
+    <Compile Include="Business\TrustECDSASignature.cs" />
     <Compile Include="Data\TrustTable.cs" />
     <Compile Include="Diagnostics\TimeMe.cs" />
+    <Compile Include="Extensions\ByteExtensions.cs" />
     <Compile Include="Extensions\EncoderExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\MemoryStreamExtensions.cs" />

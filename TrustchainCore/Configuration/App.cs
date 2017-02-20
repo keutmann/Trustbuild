@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using NBitcoin;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using TrustchainCore.IO;
@@ -8,6 +9,8 @@ namespace TrustchainCore.Configuration
     public abstract class App
     {
         public static JObject Config = new JObject();
+
+        public static Network BitcoinNetwork = Network.TestNet;
 
         static App()
         {

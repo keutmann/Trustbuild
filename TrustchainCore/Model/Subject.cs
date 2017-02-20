@@ -43,5 +43,10 @@ namespace TrustchainCore.Model
         /// Non serializeable
         /// </summary>
         public byte[] IssuerId { get; set; }
+
+        public Subject()
+        {
+            Index = -1;
+        }
     }
 }

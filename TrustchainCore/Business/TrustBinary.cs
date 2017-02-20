@@ -1,19 +1,18 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using NBitcoin.Crypto;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using TrustchainCore.Extensions;
 using TrustchainCore.Model;
 using TrustchainCore.Security.Cryptography;
 
-namespace TrustchainCore.Data
+namespace TrustchainCore.Business
 {
-    public class TrustHash
+    public class TrustBinary : ITrustBinary
     {
-        public static Func<byte[], byte[]> HashStrategy = Crypto.HashStrategy;
-
         protected Trust trust { get; set; }
 
-        public TrustHash(Trust t)
+        public TrustBinary(Trust t)
         {
             trust = t;
         }
@@ -41,11 +40,6 @@ namespace TrustchainCore.Data
 
                 return ms.ToArray();
             }
-        }
-
-        public byte[] GetIssuerHash()
-        {
-            return HashStrategy(GetIssuerBinary());
         }
     }
 }
