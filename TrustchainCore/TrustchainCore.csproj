@@ -64,8 +64,10 @@
     <Compile Include="Data\SubjectTable.cs" />
     <Compile Include="Business\TrustBinary.cs" />
     <Compile Include="Business\TrustECDSASignature.cs" />
+    <Compile Include="Data\KeyValueTable.cs" />
     <Compile Include="Data\TrustTable.cs" />
     <Compile Include="Diagnostics\TimeMe.cs" />
+    <Compile Include="Extensions\AppDomainExtensions.cs" />
     <Compile Include="Extensions\ByteExtensions.cs" />
     <Compile Include="Extensions\EncoderExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
@@ -84,6 +86,12 @@
     <Compile Include="Data\DBTable.cs" />
     <Compile Include="Data\TrustchainDatabase.cs" />
     <Compile Include="Security\Cryptography\Crypto.cs" />
+    <Compile Include="Workflow\SuccessWorkflow.cs" />
+    <Compile Include="Workflow\WorkflowLog.cs" />
+    <Compile Include="Workflow\WorkflowState.cs" />
+    <Compile Include="Workflow\Workflow.cs" />
+    <Compile Include="Workflow\WorkflowContext.cs" />
+    <Compile Include="Workflow\WorkflowEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

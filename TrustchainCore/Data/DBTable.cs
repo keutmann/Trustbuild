@@ -46,11 +46,6 @@ namespace TrustchainCore.Data
             return result;
         }
 
-        public byte[] GetByteArray(JToken token)
-        {
-            return token.Type == JTokenType.Null ? new byte[0] : (byte[])token;
-        }
-
         public virtual int Count()
         {
             var command = new SQLiteCommand("SELECT count(*) FROM " + TableName, Connection);

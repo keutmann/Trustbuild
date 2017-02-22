@@ -22,6 +22,15 @@ namespace TrustchainCore.Data
 
         public string Name { get; set; }
 
+        public KeyValueTable _keyValue = null;
+        public KeyValueTable KeyValue
+        {
+            get
+            {
+                return _keyValue ?? (_keyValue = new KeyValueTable(Connection));
+            }
+        }
+
         public TrustTable _trust = null;
         public TrustTable Trust
         {
@@ -40,11 +49,6 @@ namespace TrustchainCore.Data
             }
         }
 
-        //public TrustchainDatabase(string name)
-        //{
-        //    Name = name;
-        //}
-
         public virtual string GetDatabaseName()
         {
             return (!string.IsNullOrEmpty(App.Config["dbfilename"].ToStringValue())) ? App.Config["dbfilename"].ToStringValue() : "test.db";
@@ -55,6 +59,7 @@ namespace TrustchainCore.Data
             if (!IsMemoryDatabase && !File.Exists(Connection.FileName))
                 SQLiteConnection.CreateFile(Connection.FileName);
 
+            KeyValue.CreateIfNotExist();
             Trust.CreateIfNotExist();
             Subject.CreateIfNotExist();
         }

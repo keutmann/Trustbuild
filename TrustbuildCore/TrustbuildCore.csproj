@@ -68,6 +68,14 @@
     <Compile Include="Data\TrustbuildDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\App.cs" />
+    <Compile Include="Workflow\BuildTorrentWorkflow.cs" />
+    <Compile Include="Workflow\FinalizePackageWorkflow.cs" />
+    <Compile Include="Workflow\PublishPackageWorkflow.cs" />
+    <Compile Include="Workflow\TimeStampWorkflow.cs" />
+    <Compile Include="Workflow\PackageContext.cs" />
+    <Compile Include="Workflow\PackageState.cs" />
+    <Compile Include="Workflow\PackageEngine.cs" />
+    <Compile Include="Workflow\WorkflowPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
