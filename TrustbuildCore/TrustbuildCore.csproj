@@ -63,8 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\TrustManager.cs" />
     <Compile Include="Controllers\TrustController.cs" />
-    <Compile Include="Collections\Filter.cs" />
     <Compile Include="Data\TrustbuildDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\App.cs" />

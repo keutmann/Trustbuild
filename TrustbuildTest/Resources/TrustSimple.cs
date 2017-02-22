@@ -14,19 +14,17 @@ namespace TrustbuildTest.Resources
     ""version"": ""standard 0.1.0"", 
     ""script"": ""btc-pkh"" 
   },
-  ""issuer"": 
-    {
+  ""issuer"": {
       ""id"": ""z9+7gcKC3nbtUDd3r45Sr60nkS8="",
       ""signature"" : ""H+ybXlrtsk5Pm+TbccEky/3FR2bWWsBVUlI7RdZGicEPTI32pUFN30RGNiU9U3I1uXpMTSeKy8krgSfHdvxMnzA="",
       ""subject"": [
         {
-          ""index"": 0,
-          ""id"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz"", 
           ""idtype"": ""person"", 
+          ""id"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz"", 
           ""claimtype"": ""simpletrust"", 
           ""claim"": [{
-            ""type"": ""trust"", 
-            ""data"": ""true""
+                ""type"": ""trust"", 
+                ""data"": ""true""
               },
               {
                 ""type"": ""confirm"", 
@@ -42,7 +40,7 @@ namespace TrustbuildTest.Resources
   ,
   ""server"": {
     ""id"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz"",
-      ""signature"" : ""H+ybXlrtsk5Pm+TbccEky/3FR2bWWsBVUlI7RdZGicEPTI32pUFN30RGNiU9U3I1uXpMTSeKy8krgSfHdvxMnzA="",
+    ""signature"" : ""H+ybXlrtsk5Pm+TbccEky/3FR2bWWsBVUlI7RdZGicEPTI32pUFN30RGNiU9U3I1uXpMTSeKy8krgSfHdvxMnzA="",
   },
   ""timestamp"": [
     {

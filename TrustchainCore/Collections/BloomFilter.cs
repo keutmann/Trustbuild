@@ -5,9 +5,9 @@ using System.Diagnostics;
 /// <summary>
 /// https://bloomfilter.codeplex.com/
 /// </summary>
-namespace TrustbuildCore.Collections
+namespace TrustchainCore.Collections
 {
-    public class Filter<T>
+    public class BloomFilter<T>
     {
         /// <summary>
         /// A function that can be used to hash input.
@@ -21,7 +21,7 @@ namespace TrustbuildCore.Collections
         /// A secondary hash function will be provided for you if your type T is either string or int. Otherwise an exception will be thrown. If you are not using these types please use the overload that supports custom hash functions.
         /// </summary>
         /// <param name="capacity">The anticipated number of items to be added to the filter. More than this number of items can be added, but the error rate will exceed what is expected.</param>
-        public Filter(int capacity) : this(capacity, null) { }
+        public BloomFilter(int capacity) : this(capacity, null) { }
 
         /// <summary>
         /// Creates a new Bloom filter, using the optimal size for the underlying data structure based on the desired capacity and error rate, as well as the optimal number of hash functions.
@@ -29,14 +29,14 @@ namespace TrustbuildCore.Collections
         /// </summary>
         /// <param name="capacity">The anticipated number of items to be added to the filter. More than this number of items can be added, but the error rate will exceed what is expected.</param>
         /// <param name="errorRate">The accepable false-positive rate (e.g., 0.01F = 1%)</param>
-        public Filter(int capacity, int errorRate) : this(capacity, errorRate, null) { }
+        public BloomFilter(int capacity, int errorRate) : this(capacity, errorRate, null) { }
 
         /// <summary>
         /// Creates a new Bloom filter, specifying an error rate of 1/capacity, using the optimal size for the underlying data structure based on the desired capacity and error rate, as well as the optimal number of hash functions.
         /// </summary>
         /// <param name="capacity">The anticipated number of items to be added to the filter. More than this number of items can be added, but the error rate will exceed what is expected.</param>
         /// <param name="hashFunction">The function to hash the input values. Do not use GetHashCode(). If it is null, and T is string or int a hash function will be provided for you.</param>
-        public Filter(int capacity, HashFunction hashFunction) : this(capacity, bestErrorRate(capacity), hashFunction) { }
+        public BloomFilter(int capacity, HashFunction hashFunction) : this(capacity, bestErrorRate(capacity), hashFunction) { }
 
         /// <summary>
         /// Creates a new Bloom filter, using the optimal size for the underlying data structure based on the desired capacity and error rate, as well as the optimal number of hash functions.
@@ -44,7 +44,7 @@ namespace TrustbuildCore.Collections
         /// <param name="capacity">The anticipated number of items to be added to the filter. More than this number of items can be added, but the error rate will exceed what is expected.</param>
         /// <param name="errorRate">The accepable false-positive rate (e.g., 0.01F = 1%)</param>
         /// <param name="hashFunction">The function to hash the input values. Do not use GetHashCode(). If it is null, and T is string or int a hash function will be provided for you.</param>
-        public Filter(int capacity, float errorRate, HashFunction hashFunction) : this(capacity, errorRate, hashFunction, bestM(capacity, errorRate), bestK(capacity, errorRate)) { }
+        public BloomFilter(int capacity, float errorRate, HashFunction hashFunction) : this(capacity, errorRate, hashFunction, bestM(capacity, errorRate), bestK(capacity, errorRate)) { }
 
         /// <summary>
         /// Creates a new Bloom filter.
@@ -54,7 +54,7 @@ namespace TrustbuildCore.Collections
         /// <param name="hashFunction">The function to hash the input values. Do not use GetHashCode(). If it is null, and T is string or int a hash function will be provided for you.</param>
         /// <param name="m">The number of elements in the BitArray.</param>
         /// <param name="k">The number of hash functions to use.</param>
-        public Filter(int capacity, float errorRate, HashFunction hashFunction, int m, int k)
+        public BloomFilter(int capacity, float errorRate, HashFunction hashFunction, int m, int k)
         {
             // validate the params are in range
             if (capacity < 1)

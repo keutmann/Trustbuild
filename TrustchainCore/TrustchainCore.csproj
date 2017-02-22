@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Business\ITrustBinary.cs" />
     <Compile Include="Business\TrustSchema.cs" />
+    <Compile Include="Collections\BloomFilter.cs" />
     <Compile Include="Configuration\App.cs" />
     <Compile Include="Data\SubjectTable.cs" />
     <Compile Include="Business\TrustBinary.cs" />

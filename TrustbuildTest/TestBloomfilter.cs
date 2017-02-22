@@ -1,10 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TrustbuildCore.Collections;
+using TrustchainCore.Collections;
 
 namespace TrustbuildTest
 {
@@ -17,7 +13,7 @@ namespace TrustbuildTest
 
             int capacity = 20000; // the number of items you expect to add to the filter
             int items = 1000; // the number of items you expect to add to the filter
-            var filter1 = new Filter<string>(capacity);
+            var filter1 = new BloomFilter<string>(capacity);
             
             Console.WriteLine("Bitarray: " + (filter1.hashBits.Length / 8) / 1024 + " kb");
             // add your items, using:
@@ -36,7 +32,7 @@ namespace TrustbuildTest
             Console.WriteLine("Filter1 bits: " + countfilter1);
 
             
-            var filter2 = new Filter<string>(capacity);
+            var filter2 = new BloomFilter<string>(capacity);
             Console.WriteLine("Bitarray: " + (filter2.hashBits.Length / 8) / 1024 + " kb");
             // add your items, using:
             var existin = 0;
@@ -49,7 +45,7 @@ namespace TrustbuildTest
             Console.WriteLine("Existin : " + existin);
 
             var result = filter1.hashBits.And(filter2.hashBits);
-            var filter3 = new Filter<string>(capacity);
+            var filter3 = new BloomFilter<string>(capacity);
             filter3.hashBits = result;
 
 

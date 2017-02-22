@@ -1,23 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using TrustbuildCore.Business;
 
 namespace TrustbuildCore.Controllers
 {
     public class TrustController : ApiController
     {
-        public const string Path = "/api/proof/";
+        public const string Path = "/api/trust/";
 
         [HttpPost]
-        public IHttpActionResult Add([FromUri]string id)
+        public IHttpActionResult Add([FromBody]string id)
         {
             try
             {
-                return Ok("");
+                var manager = new TrustManager();
+
+                manager.AddNew(id);
+
+                return Ok();
             }
             catch (Exception ex)
             {

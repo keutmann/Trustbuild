@@ -59,9 +59,9 @@ namespace TrustbuildTest.Data
             //bool result = recoverAdr.Hash.ToBytes().Compare(trust.Issuer.Id) == 0; // == adr32.Hash;
 
             var ecdsaSignature = new TrustECDSASignature(trust, trustBinary);
-            var result = ecdsaSignature.VerfifyIssuerSignature();
+            var result = ecdsaSignature.VerifyTrustSignature();
 
-            Assert.IsTrue(result);
+            Assert.IsTrue(result.Count == 0);
         }
 
         [Test]
@@ -72,9 +72,9 @@ namespace TrustbuildTest.Data
 
             var trustBinary = new TrustBinary(trust);
             var ecdsaSignature = new TrustECDSASignature(trust, trustBinary);
-            var result = ecdsaSignature.VerfifyIssuerSignature();
+            var result = ecdsaSignature.VerifyTrustSignature();
 
-            Assert.IsTrue(result);
+            Assert.IsTrue(result.Count == 0);
         }
     }
 }

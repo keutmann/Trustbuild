@@ -5,6 +5,9 @@ namespace TrustchainCore.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class Trust
     {
+        [JsonIgnore]
+        public int RowID { get; set; }
+
         [JsonProperty(PropertyName = "head")]
         public Head Head { get; set; }
 

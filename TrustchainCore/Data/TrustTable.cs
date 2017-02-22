@@ -27,8 +27,8 @@ namespace TrustchainCore.Data
                 "(" +
                 "version TEXT,"+
                 "script TEXT,"+
-                "issuerid BLOB," +
-                "issuersignature BLOB," +
+                "issuerid BLOB NOT NULL," +
+                "issuersignature BLOB NOT NULL," +
                 "serverid BLOB," +
                 "serversignature BLOB,"+
                 "timestamp TEXT"+
@@ -36,8 +36,12 @@ namespace TrustchainCore.Data
             var command = new SQLiteCommand(sql, Connection);
             command.ExecuteNonQuery();
 
-            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS " + TableName+ "IssuerId ON " + TableName + " (issuerid)", Connection);
+            command = new SQLiteCommand("CREATE UNIQUE INDEX IF NOT EXISTS " + TableName+ "IssuerId ON " + TableName + " (issuerid ,issuersignature)", Connection);
             command.ExecuteNonQuery();
+
+            //command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS " + TableName + "IssuerSignature ON " + TableName + " (issuersignature)", Connection);
+            //command.ExecuteNonQuery();
+
         }
 
         public int Add(Trust trust)
@@ -54,12 +58,29 @@ namespace TrustchainCore.Data
             return command.ExecuteNonQuery();
         }
 
-        public Trust Select(byte[] issuerId)
-        {
-            var command = new SQLiteCommand("SELECT * FROM " + TableName + " where issuerid = @issuerid", Connection);
-            command.Parameters.Add(new SQLiteParameter("@issuerid", issuerId));
+        //public IEnumerable<Trust> Select(byte[] issuerId)
+        //{
+        //    var command = new SQLiteCommand("SELECT * FROM " + TableName + " where issuerid = @issuerid", Connection);
+        //    command.Parameters.Add(new SQLiteParameter("@issuerid", issuerId));
 
-            return Query<Trust>(command, NewItem).FirstOrDefault();
+        //    return Query<Trust>(command, NewItem);
+        //}
+
+        public IEnumerable<Trust> Select(byte[] issuerId, byte[] signature)
+        {
+            var command = new SQLiteCommand("SELECT * FROM " + TableName + " WHERE issuerid = @issuerid AND issuersignature = @issuersignature", Connection);
+            command.Parameters.Add(new SQLiteParameter("@issuerid", issuerId));
+            command.Parameters.Add(new SQLiteParameter("@signature", signature));
+
+            return Query<Trust>(command, NewItem);
+        }
+
+        public int Delete(byte[] issuerId, byte[] signature)
+        {
+            var command = new SQLiteCommand("DELETE FROM " + TableName + " WHERE issuerid = @issuerid AND issuersignature = @issuersignature", Connection);
+            command.Parameters.Add(new SQLiteParameter("@issuerid", issuerId));
+            command.Parameters.Add(new SQLiteParameter("@signature", signature));
+            return command.ExecuteNonQuery();
         }
 
         public Trust NewItem(SQLiteDataReader reader)

@@ -22,22 +22,52 @@ namespace TrustchainCore.Business
             Binary = trustBinary;
         }
 
-        public bool VerfifyIssuerSignature()
+        public List<string> VerifyTrustSignature()
         {
+            var Errors = new List<string>();
+
             if (trust.Issuer.Signature == null || trust.Issuer.Signature.Length == 0)
-                return false;
+            {
+                Errors.Add("Missing issuer signature");
+                return Errors;
+            }
 
-            var hashkeyid = Hashes.Hash256(Hashes.SHA256(Binary.GetIssuerBinary()));
+            var trustHash = GetHashOfBinary(Binary.GetIssuerBinary());
 
+            if (VerifySignature(trustHash, trust.Issuer.Signature, trust.Issuer.Id))
+            {
+                Errors.Add("Invalid issuer signature");
+                return Errors;
+            }
+            
 
-            var recoverAddress = PubKey.RecoverCompact(hashkeyid, trust.Issuer.Signature);
+            foreach (var subject in trust.Issuer.Subjects)
+            {
+                if (subject.Signature == null || subject.Signature.Length == 0)
+                    continue;
 
-            return recoverAddress.Hash.ToBytes().Compare(trust.Issuer.Id) == 0;
+                if (!VerifySignature(trustHash, subject.Signature, subject.Id))
+                {
+                    Errors.Add("Invalid issuer signature");
+                    return Errors;
+                }
+                    
+            }
+            return Errors;
         }
 
 
-        public void SignIssuer(byte[] signature)
+
+        public static uint256 GetHashOfBinary(byte[] data)
         {
+            return Hashes.Hash256(Hashes.SHA256(data));
+        }
+
+        public bool VerifySignature(uint256 hashkeyid, byte[] signature, byte[] address)
+        {
+            var recoverAddress = PubKey.RecoverCompact(hashkeyid, signature);
+
+            return recoverAddress.Hash.ToBytes().Compare(address) == 0;
 
         }
     }

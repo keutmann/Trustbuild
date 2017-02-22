@@ -38,19 +38,19 @@ namespace TrustchainCore.Data
             var command = new SQLiteCommand(sql, Connection);
             command.ExecuteNonQuery();
 
-            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustSubjectIssuerId ON " + TableName + " (issuerid)", Connection);
+            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS " + TableName + "IssuerId ON " + TableName + " (issuerid)", Connection);
             command.ExecuteNonQuery();
-            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustSubjectId ON " + TableName + " (id)", Connection);
+            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS " + TableName + "Id ON " + TableName + " (id)", Connection);
             command.ExecuteNonQuery();
-            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustSubjectIdType ON " + TableName + " (idtype)", Connection);
+            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS " + TableName + "IdType ON " + TableName + " (idtype)", Connection);
             command.ExecuteNonQuery();
-            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS TrustSubjectScope ON " + TableName + " (scope)", Connection);
+            command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS " + TableName + "Scope ON " + TableName + " (scope)", Connection);
             command.ExecuteNonQuery();
         }
 
         public int Add(Subject subject)
         {
-            var command = new SQLiteCommand("INSERT INTO " + TableName + " (issuerid, id, signature, idtype, claim, cost, activate, expire, scope) "+
+            var command = new SQLiteCommand("REPLACE INTO " + TableName + " (issuerid, id, signature, idtype, claim, cost, activate, expire, scope) "+
                 "VALUES (@issuerid, @id, @signature, @idtype, @claim, @cost, @activate, @expire, @scope)", Connection);
 
             command.Parameters.Add(new SQLiteParameter("@issuerid", subject.IssuerId));

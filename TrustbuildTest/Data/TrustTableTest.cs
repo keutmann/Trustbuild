@@ -24,7 +24,7 @@ namespace TrustbuildTest.Data
 
                 db.Trust.Add(trust);
 
-                var result = db.Trust.Select(trust.Issuer.Id);
+                var result = db.Trust.Select(trust.Issuer.Id, trust.Issuer.Signature).FirstOrDefault();
                 Assert.IsNotNull(result);
                 Assert.AreEqual(trust.Issuer.Signature, result.Issuer.Signature);
                 Assert.AreEqual(trust.Server.Signature, result.Server.Signature);
@@ -57,7 +57,7 @@ namespace TrustbuildTest.Data
                 {
                     foreach (var item in ids)
                     {
-                        var test = db.Trust.Select(item.Issuer.Id);
+                        var test = db.Trust.Select(item.Issuer.Id, item.Issuer.Signature).FirstOrDefault();
                         Assert.IsNotNull(test, "count: "+count);
                     }
                 }

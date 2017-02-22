@@ -64,7 +64,7 @@ namespace TrustchainCore.Data
             Subject.CreateIfNotExist();
         }
 
-        public virtual SQLiteConnection OpenConnection()
+        public virtual SQLiteConnection OpenConnection(string dbFilename = null)
         {
             if(IsMemoryDatabase)
             {
@@ -75,19 +75,22 @@ namespace TrustchainCore.Data
                 return Connection;
             }
 
-            if(!string.IsNullOrEmpty(App.Config["dbconnectionstring"].ToStringValue()))
+            if(dbFilename == null && !string.IsNullOrEmpty(App.Config["dbconnectionstring"].ToStringValue()))
             {
                 Connection = new SQLiteConnection(App.Config["dbconnectionstring"].ToStringValue());
                 Connection.Open();
                 return Connection;
             }
 
-            var dbFilename = (!string.IsNullOrEmpty(App.Config["dbfilename"].ToStringValue())) ? App.Config["dbfilename"].ToStringValue() : Name;
+
+            if(string.IsNullOrEmpty(dbFilename))
+               dbFilename= (!string.IsNullOrEmpty(App.Config["dbfilename"].ToStringValue())) ? App.Config["dbfilename"].ToStringValue() : Name;
+
             if (!string.IsNullOrEmpty(dbFilename))
             {
                 var sb = new SQLiteConnectionStringBuilder();
 
-                sb.DataSource = (string)App.Config["dbfilename"];
+                sb.DataSource = dbFilename;
                 var dbObject = App.Config["database"];
                 sb.Flags = SQLiteConnectionFlags.UseConnectionPool;
                 //tt.NoSharedFlags = false;
@@ -113,7 +116,7 @@ namespace TrustchainCore.Data
             throw new ApplicationException("Not database connection found");
         }
 
-        public static TrustchainDatabase Open()
+        public static TrustchainDatabase Open(string dbname = null)
         {
             if (App.Config["test"].ToBoolean())
                 IsMemoryDatabase = true;
@@ -158,9 +161,9 @@ namespace TrustchainCore.Data
             return result;
         }
 
-        public Trust GetTrust(byte[] issuerid)
+        public Trust GetTrust(byte[] issuerid, byte[] issuersignature)
         {
-            var result = Trust.Select(issuerid);
+            var result = Trust.Select(issuerid, issuersignature).FirstOrDefault();
             var subjects = Subject.Select(issuerid);
             result.Issuer.Subjects = subjects.ToArray();
             return result;

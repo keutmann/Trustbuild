@@ -23,7 +23,7 @@ namespace TrustbuildTest.Data
 
                 db.AddTrust(trust);
 
-                var result = db.GetTrust(trust.Issuer.Id);
+                var result = db.GetTrust(trust.Issuer.Id, trust.Issuer.Signature);
 
                 Assert.IsNotNull(result);
                 Assert.AreEqual(trust.Issuer.Signature, result.Issuer.Signature);
