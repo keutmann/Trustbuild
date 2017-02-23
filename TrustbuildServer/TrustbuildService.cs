@@ -6,10 +6,13 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Web.Http;
+using TrustbuildCore.Business;
+using TrustbuildCore.Provider;
 using TrustbuildCore.Service;
+using TrustbuildCore.Workflow;
 using TrustchainCore.Data;
 using TrustchainCore.Extensions;
-
+using TrustchainCore.Workflow;
 
 namespace TrustbuildServer
 {
@@ -34,6 +37,8 @@ namespace TrustbuildServer
         private Timer timer;
         private int timeInMs = 1000*60; // 1 minute
         private volatile bool process = true;
+
+        public object Key { get; private set; }
 
         public void Start()
         {
@@ -98,6 +103,16 @@ namespace TrustbuildServer
         public void Execute()
         {
             Console.WriteLine(DateTime.Now.ToLocalTime() + " : Processing...");
+
+            //var serverkey32 = Key.Parse(App.Config["serverwif"].ToString(), TrustbuildCore.Service.App.BitcoinNetwork);
+            //var id = serverkey32.PubKey.GetAddress(App.BitcoinNetwork).Hash.ToBytes();
+
+            //var manager = new TrustManager();
+            //var provider = new PackageProvider(manager.GetCurrentDBTrustname());
+            //var packages = provider.GetBuildPackages(WorkflowStatus.Ready);
+            //var engine = new PackageEngine(packages);
+
+            //engine.Execute();
         }
 
         public void Pause()

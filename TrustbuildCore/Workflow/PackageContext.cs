@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,12 +30,24 @@ namespace TrustbuildCore.Workflow
             // Load db file
             using (var db = TrustchainDatabase.Open(filename))
             {
-                
+                var package = new PackageState();
+                var json = db.KeyValue.Get("state");
+                if(json != null)
+                    package = JsonConvert.DeserializeObject<PackageState>(json);
 
-                Package = new PackageState();
-                Package.Filename = filename;
+                if (package.Status == WorkflowStatus.Ready)
+                    package.Status = WorkflowStatus.Running;
+
+                if (string.IsNullOrEmpty(package.Filename))
+                    package.Filename = filename;
+
+                if(string.IsNullOrEmpty(package.ExecutingWorkflowName))
+                    package.ExecutingWorkflowName = typeof(TimeStampWorkflow).FullName;
+
                 // Get State from file!
-                Push(new TimeStampWorkflow());
+                Push(package.ExecutingWorkflowName);
+
+                Update();
             }
 
         }
@@ -44,5 +57,14 @@ namespace TrustbuildCore.Workflow
             base.Log(message);
             Console.WriteLine(message);
         }
-    }
+
+        public override void Update()
+        {
+            using (var db = TrustchainDatabase.Open(Package.Filename))
+            {
+                db.KeyValue.Put("state", JsonConvert.SerializeObject(Package));
+            }
+
+            }
+        }
 }

@@ -10,33 +10,11 @@ namespace TrustchainCore.Workflow
 {
     public class WorkflowContext
     {
-        //public static Dictionary<string, Type> WorkflowTypes = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
-
         public Stack<WorkflowBase> Workflows = new Stack<WorkflowBase>();
 
         //public Dictionary<string, object> KeyValueTable = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
         public virtual WorkflowState State { get; set; }
-
-        //static WorkflowContext()
-        //{
-            //var wfType = typeof(Workflow);
-            //var types = AppDomain.CurrentDomain.FindTypes((type) => type.IsSubclassOf(wfType));
-            //foreach (var type in types)
-            //{
-            //    AddWorkflowType(type);
-            //}
-        //}
-
-        //private static void AddWorkflowType(Type wfType)
-        //{
-        //    if (!WorkflowTypes.ContainsKey(wfType.Name))
-        //        WorkflowTypes.Add(wfType.Name, wfType);
-        //}
-
-        //public WorkflowContext()
-        //{
-        //}
 
         public virtual async Task Execute()
         {

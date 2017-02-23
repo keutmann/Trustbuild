@@ -29,6 +29,8 @@ namespace TrustbuildCore.Business
             AddToDatabase(trust);
         }
 
+        
+
         public void SignServerSignature(TrustModel trust)
         {
             var binary = new TrustBinary(trust);
