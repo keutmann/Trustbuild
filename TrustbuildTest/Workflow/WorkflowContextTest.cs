@@ -14,8 +14,9 @@ namespace TrustbuildTest.Workflow
         [Test]
         public void TestEngine()
         {
-            var engine = new PackageEngine();
-            engine.Load();
+            var list = new List<string>() { "test.db", "test2.dk" };
+
+            var engine = new PackageEngine(list);
             engine.Execute();
 
             Assert.IsTrue(true);

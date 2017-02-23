@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace TrustchainCore.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Subject
+    public class SubjectModel
     {
         /// <summary>
         /// Subject target id
@@ -26,7 +26,7 @@ namespace TrustchainCore.Model
         public byte[] Signature { get; set; }
 
         [JsonProperty(PropertyName = "claim")]
-        public Claim[] Claims { get; set; }
+        public ClaimModel[] Claims { get; set; }
 
         [JsonProperty(PropertyName = "cost")]
         public int Cost { get; set; }

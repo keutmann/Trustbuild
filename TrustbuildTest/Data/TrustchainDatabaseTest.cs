@@ -19,7 +19,7 @@ namespace TrustbuildTest.Data
         {
             using (var db = TrustchainDatabase.Open())
             {
-                var trust = JsonConvert.DeserializeObject<Trust>(TrustSimple.JSON);
+                var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
 
                 db.AddTrust(trust);
 

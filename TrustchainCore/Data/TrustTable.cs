@@ -44,7 +44,7 @@ namespace TrustchainCore.Data
 
         }
 
-        public int Add(Trust trust)
+        public int Add(TrustModel trust)
         {
             var command = new SQLiteCommand("INSERT INTO " + TableName + " (version, script, issuerid, issuersignature, serverid, serversignature, timestamp) "+ 
                 "VALUES (@version, @script, @issuerid, @issuersignature, @serverid, @serversignature, @timestamp)", Connection);
@@ -66,13 +66,13 @@ namespace TrustchainCore.Data
         //    return Query<Trust>(command, NewItem);
         //}
 
-        public IEnumerable<Trust> Select(byte[] issuerId, byte[] signature)
+        public IEnumerable<TrustModel> Select(byte[] issuerId, byte[] signature)
         {
             var command = new SQLiteCommand("SELECT * FROM " + TableName + " WHERE issuerid = @issuerid AND issuersignature = @issuersignature", Connection);
             command.Parameters.Add(new SQLiteParameter("@issuerid", issuerId));
             command.Parameters.Add(new SQLiteParameter("@signature", signature));
 
-            return Query<Trust>(command, NewItem);
+            return Query<TrustModel>(command, NewItem);
         }
 
         public int Delete(byte[] issuerId, byte[] signature)
@@ -83,26 +83,26 @@ namespace TrustchainCore.Data
             return command.ExecuteNonQuery();
         }
 
-        public Trust NewItem(SQLiteDataReader reader)
+        public TrustModel NewItem(SQLiteDataReader reader)
         {
-            return new Trust
+            return new TrustModel
             {
-                Head = new Head
+                Head = new HeadModel
                 {
                     Version = reader.GetString("version"),
                     Script = reader.GetString("script")
                 },
-                Issuer = new Issuer
+                Issuer = new IssuerModel
                 {
                     Id = reader.GetBytes("issuerid"),
                     Signature = reader.GetBytes("issuersignature")
                 },
-                Server = new Server
+                Server = new ServerModel
                 {
                     Id = reader.GetBytes("serverid"),
                     Signature = reader.GetBytes("serversignature")
                 },
-                Timestamp = reader.GetString("timestamp").DeserializeObject<Timestamp[]>()
+                Timestamp = reader.GetString("timestamp").DeserializeObject<TimestampModel[]>()
             };
         }
     }

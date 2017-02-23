@@ -20,7 +20,7 @@ namespace TrustbuildTest.Data
         {
             using (var db = TrustchainDatabase.Open())
             {
-                var trust = JsonConvert.DeserializeObject<Trust>(TrustSimple.JSON);
+                var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
 
                 db.Trust.Add(trust);
 
@@ -39,8 +39,8 @@ namespace TrustbuildTest.Data
             int numberOfTestItems = 200;
             using (var db = TrustchainDatabase.Open())
             {
-                var trust = JsonConvert.DeserializeObject<Trust>(TrustSimple.JSON);
-                var ids = new List<Trust>();
+                var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
+                var ids = new List<TrustModel>();
                 using (var timer = new TimeMe("Adding Trust"))
                 {
                     for (int i = 0; i < numberOfTestItems; i++)

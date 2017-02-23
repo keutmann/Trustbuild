@@ -48,7 +48,7 @@ namespace TrustchainCore.Data
             command.ExecuteNonQuery();
         }
 
-        public int Add(Subject subject)
+        public int Add(SubjectModel subject)
         {
             var command = new SQLiteCommand("REPLACE INTO " + TableName + " (issuerid, id, signature, idtype, claim, cost, activate, expire, scope) "+
                 "VALUES (@issuerid, @id, @signature, @idtype, @claim, @cost, @activate, @expire, @scope)", Connection);
@@ -65,23 +65,23 @@ namespace TrustchainCore.Data
             return command.ExecuteNonQuery();
         }
 
-        public IEnumerable<Subject> Select(byte[] issuerId)
+        public IEnumerable<SubjectModel> Select(byte[] issuerId)
         {
             var command = new SQLiteCommand("SELECT * FROM " + TableName + " where issuerid = @issuerid", Connection);
             command.Parameters.Add(new SQLiteParameter("@issuerid", issuerId));
 
-            return Query<Subject>(command, NewItem);
+            return Query<SubjectModel>(command, NewItem);
         }
 
-        public Subject NewItem(SQLiteDataReader reader)
+        public SubjectModel NewItem(SQLiteDataReader reader)
         {
-            return new Subject
+            return new SubjectModel
             {
                 IssuerId = reader.GetBytes("issuerid"),
                 Id = reader.GetBytes("id"),
                 Signature = reader.GetBytes("signature"),
                 IdType = reader.GetString("idtype"),
-                Claims = reader.GetString("claim").DeserializeObject<Claim[]>(),
+                Claims = reader.GetString("claim").DeserializeObject<ClaimModel[]>(),
                 Cost = reader.GetInt32(5),
                 Activate = reader.GetDateTime(6),
                 Expire = reader.GetDateTime(7),

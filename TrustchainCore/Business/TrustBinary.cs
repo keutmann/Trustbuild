@@ -10,18 +10,18 @@ namespace TrustchainCore.Business
 {
     public class TrustBinary : ITrustBinary
     {
-        protected Trust trust { get; set; }
+        protected TrustModel Trust { get; set; }
 
-        public TrustBinary(Trust t)
+        public TrustBinary(TrustModel trust)
         {
-            trust = t;
+            this.Trust = trust;
         }
 
         public byte[] GetIssuerBinary()
         {
             using (MemoryStream ms = new MemoryStream())
             {
-                var issuer = trust.Issuer;
+                var issuer = Trust.Issuer;
                 ms.WriteBytes(issuer.Id);
                 foreach (var subject in issuer.Subjects)
                 {

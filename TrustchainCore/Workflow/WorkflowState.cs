@@ -8,7 +8,6 @@ namespace TrustchainCore.Workflow
 {
     public enum WorkflowStatus : int
     {
-        None,
         Ready,
         Running,
         Finished,

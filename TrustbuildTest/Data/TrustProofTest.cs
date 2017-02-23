@@ -25,7 +25,7 @@ namespace TrustbuildTest.Data
         [Test]
         public void LoadTrust()
         {
-            var trust = JsonConvert.DeserializeObject<Trust>(TrustSimple.JSON);
+            var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
             Assert.IsTrue(trust != null);
             Assert.IsTrue(trust.Issuer != null);
             Assert.IsTrue(trust.Issuer.Subjects != null);
@@ -36,7 +36,7 @@ namespace TrustbuildTest.Data
         [Test]
         public void VerfifyIssuerSignature()
         {
-            var trust = JsonConvert.DeserializeObject<Trust>(TrustSimple.JSON);
+            var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
             Assert.IsTrue(trust != null);
 
             var key32 = new Key(Hashes.SHA256(Encoding.UTF8.GetBytes("Trustchain")));
@@ -67,7 +67,7 @@ namespace TrustbuildTest.Data
         [Test]
         public void VerfifyTrustSignature()
         {
-            var trust = JsonConvert.DeserializeObject<Trust>(TrustSimple.JSON);
+            var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
             Assert.IsTrue(trust != null);
 
             var trustBinary = new TrustBinary(trust);

@@ -12,9 +12,9 @@ namespace TrustchainCore.Business
 
         public List<string> Errors { get; set; }
 
-        protected Trust trust { get; set; }
+        protected TrustModel trust { get; set; }
 
-        public TrustSchema(Trust t)
+        public TrustSchema(TrustModel t)
         {
             trust = t;
             Errors = new List<string>();

@@ -17,7 +17,7 @@ namespace TrustbuildCore.Business
 
         public void AddNew(string content)
         {
-            var trust = JsonConvert.DeserializeObject<Trust>(content);
+            var trust = JsonConvert.DeserializeObject<TrustModel>(content);
 
             VerifyTrust(trust);
 
@@ -29,7 +29,7 @@ namespace TrustbuildCore.Business
             AddToDatabase(trust);
         }
 
-        public void SignServerSignature(Trust trust)
+        public void SignServerSignature(TrustModel trust)
         {
             var binary = new TrustBinary(trust);
 
@@ -37,12 +37,12 @@ namespace TrustbuildCore.Business
 
             var serverkey32 = Key.Parse(App.Config["serverwif"].ToString(), App.BitcoinNetwork);
 
-            trust.Server = new Server();
+            trust.Server = new ServerModel();
             trust.Server.Id = serverkey32.PubKey.GetAddress(App.BitcoinNetwork).Hash.ToBytes();
             trust.Server.Signature = serverkey32.SignCompact(trustHash);
         }
 
-        public void AddToDatabase(Trust trust)
+        public void AddToDatabase(TrustModel trust)
         {
             var dbname = GetCurrentDBTrustname(trust.Server.Id);
             var fullpath = Path.Combine(App.Config["buildpath"].ToStringValue(), dbname);
@@ -78,7 +78,7 @@ namespace TrustbuildCore.Business
 
 
 
-        public int AddTrust(Trust trust, TrustchainDatabase db)
+        public int AddTrust(TrustModel trust, TrustchainDatabase db)
         {
             var result = db.Trust.Add(trust);
             if (result < 1)
@@ -95,7 +95,7 @@ namespace TrustbuildCore.Business
         }
 
 
-        public void VerifyTrust(Trust trust)
+        public void VerifyTrust(TrustModel trust)
         {
             var schema = new TrustSchema(trust);
             if (!schema.Validate())

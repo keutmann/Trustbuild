@@ -9,17 +9,12 @@ namespace TrustbuildCore.Workflow
 {
     public class PackageEngine : WorkflowEngine
     {
-        public void Load()
+        public PackageEngine(List<string> packages)
         {
-            // Find packages
-            var files = new string[] { "test.trust", "test1.trust", "test2.trust", "test4.trust" };
-
-            // 
-            foreach (var file in files)
+            foreach (var file in packages)
             {
                 Tasks.Add(new PackageContext(file));
             }
-            
         }
     }
 }

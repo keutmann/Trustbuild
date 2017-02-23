@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace TrustchainCore.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Claim
+    public class ClaimModel
     {
         [JsonProperty(PropertyName = "type")]
         public string Type { get; set; }

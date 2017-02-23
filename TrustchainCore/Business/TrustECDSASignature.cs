@@ -13,12 +13,12 @@ namespace TrustchainCore.Business
 {
     public class TrustECDSASignature
     {
-        protected Trust trust { get; set; }
+        protected TrustModel Trust { get; set; }
         protected ITrustBinary Binary { get; set; }
 
-        public TrustECDSASignature(Trust t, ITrustBinary trustBinary)
+        public TrustECDSASignature(TrustModel trust, ITrustBinary trustBinary)
         {
-            trust = t;
+            this.Trust = trust;
             Binary = trustBinary;
         }
 
@@ -26,7 +26,7 @@ namespace TrustchainCore.Business
         {
             var Errors = new List<string>();
 
-            if (trust.Issuer.Signature == null || trust.Issuer.Signature.Length == 0)
+            if (Trust.Issuer.Signature == null || Trust.Issuer.Signature.Length == 0)
             {
                 Errors.Add("Missing issuer signature");
                 return Errors;
@@ -34,14 +34,14 @@ namespace TrustchainCore.Business
 
             var trustHash = GetHashOfBinary(Binary.GetIssuerBinary());
 
-            if (VerifySignature(trustHash, trust.Issuer.Signature, trust.Issuer.Id))
+            if (VerifySignature(trustHash, Trust.Issuer.Signature, Trust.Issuer.Id))
             {
                 Errors.Add("Invalid issuer signature");
                 return Errors;
             }
             
 
-            foreach (var subject in trust.Issuer.Subjects)
+            foreach (var subject in Trust.Issuer.Subjects)
             {
                 if (subject.Signature == null || subject.Signature.Length == 0)
                     continue;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TrustchainCore.Data;
 using TrustchainCore.Workflow;
 
 namespace TrustbuildCore.Workflow
@@ -26,10 +27,16 @@ namespace TrustbuildCore.Workflow
         public PackageContext(string filename)
         {
             // Load db file
-            Package = new PackageState();
-            Package.Filename = filename;
-            // Get State from file!
-            Push(new TimeStampWorkflow());
+            using (var db = TrustchainDatabase.Open(filename))
+            {
+                
+
+                Package = new PackageState();
+                Package.Filename = filename;
+                // Get State from file!
+                Push(new TimeStampWorkflow());
+            }
+
         }
 
         public override void Log(string message)

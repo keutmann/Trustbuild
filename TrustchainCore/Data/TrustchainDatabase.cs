@@ -145,7 +145,7 @@ namespace TrustchainCore.Data
             }
         }
 
-        public int AddTrust(Trust trust)
+        public int AddTrust(TrustModel trust)
         {
             var result = Trust.Add(trust);
             if (result < 1)
@@ -161,7 +161,7 @@ namespace TrustchainCore.Data
             return result;
         }
 
-        public Trust GetTrust(byte[] issuerid, byte[] issuersignature)
+        public TrustModel GetTrust(byte[] issuerid, byte[] issuersignature)
         {
             var result = Trust.Select(issuerid, issuersignature).FirstOrDefault();
             var subjects = Subject.Select(issuerid);

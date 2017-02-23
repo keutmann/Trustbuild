@@ -3,7 +3,7 @@
 namespace TrustchainCore.Model
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public class Timestamp
+    public class TimestampModel
     {
         [JsonProperty(PropertyName = "blockchain")]
         public string Blockchain { get; set; }
