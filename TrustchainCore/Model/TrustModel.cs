@@ -6,7 +6,7 @@ namespace TrustchainCore.Model
     public class TrustModel
     {
         [JsonIgnore]
-        public int RowID { get; set; }
+        public byte[] TrustId { get; set; }
 
         [JsonProperty(PropertyName = "head")]
         public HeadModel Head { get; set; }

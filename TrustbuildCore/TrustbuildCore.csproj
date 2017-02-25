@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\ServerIdentity.cs" />
     <Compile Include="Business\TrustManager.cs" />
     <Compile Include="Controllers\TrustController.cs" />
     <Compile Include="Data\TrustbuildDatabase.cs" />
@@ -72,6 +73,8 @@
     <Compile Include="Workflow\BuildTorrentWorkflow.cs" />
     <Compile Include="Workflow\FinalizePackageWorkflow.cs" />
     <Compile Include="Workflow\PublishPackageWorkflow.cs" />
+    <Compile Include="Workflow\BuildBitcoinMerkleWorkflow.cs" />
+    <Compile Include="Workflow\ServerSignWorkflow.cs" />
     <Compile Include="Workflow\TimeStampWorkflow.cs" />
     <Compile Include="Workflow\PackageContext.cs" />
     <Compile Include="Workflow\PackageState.cs" />

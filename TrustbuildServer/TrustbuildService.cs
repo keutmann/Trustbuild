@@ -104,9 +104,6 @@ namespace TrustbuildServer
         {
             Console.WriteLine(DateTime.Now.ToLocalTime() + " : Processing...");
 
-            //var serverkey32 = Key.Parse(App.Config["serverwif"].ToString(), TrustbuildCore.Service.App.BitcoinNetwork);
-            //var id = serverkey32.PubKey.GetAddress(App.BitcoinNetwork).Hash.ToBytes();
-
             //var manager = new TrustManager();
             //var provider = new PackageProvider(manager.GetCurrentDBTrustname());
             //var packages = provider.GetBuildPackages(WorkflowStatus.Ready);

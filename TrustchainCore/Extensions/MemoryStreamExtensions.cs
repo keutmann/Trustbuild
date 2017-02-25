@@ -13,11 +13,16 @@ namespace TrustchainCore.Extensions
         {
             ms.Write(data, 0, data.Length);
         }
+        /// <summary>
+        /// Write a string in UTF8 format to the memoryStream
+        /// </summary>
+        /// <param name="ms"></param>
+        /// <param name="text"></param>
         public static void WriteString(this MemoryStream ms, string text)
         {
-            var bytes = Encoding.UTF8.GetBytes(text);
-            ms.WriteBytes(bytes);
+            ms.WriteBytes(Encoding.UTF8.GetBytes(text));
         }
+
         public static void WriteInteger(this MemoryStream ms, int num)
         {
             var bytes = BitConverter.GetBytes(num);

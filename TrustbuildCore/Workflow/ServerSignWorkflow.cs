@@ -4,33 +4,33 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TrustbuildCore.Business;
 using TrustchainCore.Data;
 using TrustchainCore.Workflow;
 
 namespace TrustbuildCore.Workflow
 {
-    public class TimeStampWorkflow : WorkflowPackage
+    public class ServerSignWorkflow : WorkflowPackage
     {
         public override void Execute()
        {
-            Context.Log("Timestamp of trust started");
+            Context.Log("Server sign of trust started");
             Context.Update();
 
             using (var db = TrustchainDatabase.Open(Package.Filename))
             {
 
-                var trusts = db.Trust.Select();
+                var trusts = db.Trust.SelectServerUnsigned();
                 foreach (var item in trusts)
                 {
-                    if (item.Timestamp == null)
-                        return;
-
-                    // Calc merkle 
+                    var hash = new NBitcoin.uint256(item.TrustId);
+                    item.Server.Signature = ServerIdentity.Current.PrivateKey.SignCompact(hash);
+                    db.Trust.Replace(item);
                 }
             }
 
-            Context.Log("Timestamp of trust done");
-            Context.Push(new FinalizePackageWorkflow());
+            Context.Log("Server sign of trust done");
+            Context.Push(new BuildBitcoinMerkleWorkflow());
             Context.Update();
         }
     }

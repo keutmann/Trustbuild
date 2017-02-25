@@ -25,14 +25,15 @@ namespace TrustchainCore.Data
 
             var  sql = "CREATE TABLE IF NOT EXISTS " + TableName + " " +
                 "(" +
-                "version TEXT,"+
+                "trustid BLOB NOT NULL PRIMARY KEY," +
+                "version TEXT," +
                 "script TEXT,"+
                 "issuerid BLOB NOT NULL," +
                 "issuersignature BLOB NOT NULL," +
                 "serverid BLOB," +
                 "serversignature BLOB,"+
                 "timestamp TEXT"+
-                ")";
+                ") WITHOUT ROWID";
             var command = new SQLiteCommand(sql, Connection);
             command.ExecuteNonQuery();
 
@@ -46,8 +47,9 @@ namespace TrustchainCore.Data
 
         public int Add(TrustModel trust)
         {
-            var command = new SQLiteCommand("INSERT INTO " + TableName + " (version, script, issuerid, issuersignature, serverid, serversignature, timestamp) "+ 
+            var command = new SQLiteCommand("INSERT INTO " + TableName + " (trustid, version, script, issuerid, issuersignature, serverid, serversignature, timestamp) "+ 
                 "VALUES (@version, @script, @issuerid, @issuersignature, @serverid, @serversignature, @timestamp)", Connection);
+            command.Parameters.Add(new SQLiteParameter("@trustid", trust.TrustId));
             command.Parameters.Add(new SQLiteParameter("@version", trust.Head.Version));
             command.Parameters.Add(new SQLiteParameter("@script", trust.Head.Script));
             command.Parameters.Add(new SQLiteParameter("@issuerid", trust.Issuer.Id));
@@ -58,13 +60,43 @@ namespace TrustchainCore.Data
             return command.ExecuteNonQuery();
         }
 
-        //public IEnumerable<Trust> Select(byte[] issuerId)
-        //{
-        //    var command = new SQLiteCommand("SELECT * FROM " + TableName + " where issuerid = @issuerid", Connection);
-        //    command.Parameters.Add(new SQLiteParameter("@issuerid", issuerId));
+        public int Replace(TrustModel trust)
+        {
+            var command = new SQLiteCommand("REPLACE INTO " + TableName + " (trustid, version, script, issuerid, issuersignature, serverid, serversignature, timestamp) " +
+                "VALUES (@version, @script, @issuerid, @issuersignature, @serverid, @serversignature, @timestamp)", Connection);
+            command.Parameters.Add(new SQLiteParameter("@trustid", trust.TrustId));
+            command.Parameters.Add(new SQLiteParameter("@version", trust.Head.Version));
+            command.Parameters.Add(new SQLiteParameter("@script", trust.Head.Script));
+            command.Parameters.Add(new SQLiteParameter("@issuerid", trust.Issuer.Id));
+            command.Parameters.Add(new SQLiteParameter("@issuersignature", trust.Issuer.Signature));
+            command.Parameters.Add(new SQLiteParameter("@serverid", trust.Server.Id));
+            command.Parameters.Add(new SQLiteParameter("@serversignature", trust.Server.Signature));
+            command.Parameters.Add(new SQLiteParameter("@timestamp", trust.Timestamp.SerializeObject()));
+            return command.ExecuteNonQuery();
+        }
 
-        //    return Query<Trust>(command, NewItem);
-        //}
+
+
+        public IEnumerable<TrustModel> Select()
+        {
+            var command = new SQLiteCommand("SELECT * FROM " + TableName, Connection);
+            return Query<TrustModel>(command, NewItem);
+        }
+
+        public TrustModel SelectOne(byte[] trustid)
+        {
+            var command = new SQLiteCommand("SELECT * FROM " + TableName + " WHERE trustid = @trustid", Connection);
+            command.Parameters.Add(new SQLiteParameter("@trustid", trustid));
+
+            return Query<TrustModel>(command, NewItem).FirstOrDefault();
+        }
+
+        public IEnumerable<TrustModel> SelectServerUnsigned()
+        {
+            var command = new SQLiteCommand("SELECT * FROM " + TableName + " WHERE ifnull(length(serversignature), 0) = 0", Connection);
+            return Query<TrustModel>(command, NewItem);
+        }
+
 
         public IEnumerable<TrustModel> Select(byte[] issuerId, byte[] signature)
         {
@@ -87,6 +119,7 @@ namespace TrustchainCore.Data
         {
             return new TrustModel
             {
+                TrustId = reader.GetBytes("trustid"),
                 Head = new HeadModel
                 {
                     Version = reader.GetString("version"),

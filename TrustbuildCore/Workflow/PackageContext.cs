@@ -42,7 +42,7 @@ namespace TrustbuildCore.Workflow
                     package.Filename = filename;
 
                 if(string.IsNullOrEmpty(package.ExecutingWorkflowName))
-                    package.ExecutingWorkflowName = typeof(TimeStampWorkflow).FullName;
+                    package.ExecutingWorkflowName = typeof(ServerSignWorkflow).FullName;
 
                 // Get State from file!
                 Push(package.ExecutingWorkflowName);
@@ -65,6 +65,6 @@ namespace TrustbuildCore.Workflow
                 db.KeyValue.Put("state", JsonConvert.SerializeObject(Package));
             }
 
-            }
         }
+    }
 }

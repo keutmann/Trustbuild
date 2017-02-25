@@ -14,6 +14,12 @@ namespace TrustchainCore.Data
         public static string MemoryConnectionString = "Data Source=:memory:;Version=3;";
         public static TrustchainDatabase MemoryDatabase;
         public static object lockObject = new object();
+
+        public static IDisposable Open(object filename)
+        {
+            throw new NotImplementedException();
+        }
+
         private static volatile bool created = true;
 
         public static volatile bool IsMemoryDatabase = false;

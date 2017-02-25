@@ -14,12 +14,10 @@ namespace TrustchainCore.Business
     public class TrustECDSASignature
     {
         protected TrustModel Trust { get; set; }
-        protected ITrustBinary Binary { get; set; }
 
-        public TrustECDSASignature(TrustModel trust, ITrustBinary trustBinary)
+        public TrustECDSASignature(TrustModel trust)
         {
             this.Trust = trust;
-            Binary = trustBinary;
         }
 
         public List<string> VerifyTrustSignature()
@@ -32,7 +30,7 @@ namespace TrustchainCore.Business
                 return Errors;
             }
 
-            var trustHash = GetHashOfBinary(Binary.GetIssuerBinary());
+            var trustHash = new uint256(Trust.TrustId);
 
             if (VerifySignature(trustHash, Trust.Issuer.Signature, Trust.Issuer.Id))
             {
@@ -58,9 +56,9 @@ namespace TrustchainCore.Business
 
 
 
-        public static uint256 GetHashOfBinary(byte[] data)
+        public static byte[] GetHashOfBinary(byte[] data)
         {
-            return Hashes.Hash256(Hashes.SHA256(data));
+            return Hashes.SHA256(Hashes.SHA256(data));
         }
 
         public bool VerifySignature(uint256 hashkeyid, byte[] signature, byte[] address)

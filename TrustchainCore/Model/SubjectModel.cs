@@ -45,5 +45,11 @@ namespace TrustchainCore.Model
         /// Not included in the Binary payload for signature verification!
         /// </summary>
         public byte[] IssuerId { get; set; }
+
+        /// <summary>
+        /// FOREIGN KEY to a Trust
+        /// </summary>
+        public byte[] TrustId { get; set; }
+
     }
 }

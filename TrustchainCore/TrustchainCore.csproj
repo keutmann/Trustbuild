@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\ITrustBinary.cs" />
+    <Compile Include="Business\MerkleTree.cs" />
     <Compile Include="Business\TrustSchema.cs" />
     <Compile Include="Collections\BloomFilter.cs" />
     <Compile Include="Configuration\App.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Model\ClaimModel.cs" />
     <Compile Include="Model\HeadModel.cs" />
     <Compile Include="Model\IssuerModel.cs" />
+    <Compile Include="Model\MerkleNodeModel.cs" />
     <Compile Include="Model\ServerModel.cs" />
     <Compile Include="Model\SubjectModel.cs" />
     <Compile Include="Model\TimestampModel.cs" />

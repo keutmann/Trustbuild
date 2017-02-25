@@ -58,7 +58,9 @@ namespace TrustbuildTest.Data
             //var recoverAdr = PubKey.RecoverCompact(hashkeyid, trust.Signature.Issuer);
             //bool result = recoverAdr.Hash.ToBytes().Compare(trust.Issuer.Id) == 0; // == adr32.Hash;
 
-            var ecdsaSignature = new TrustECDSASignature(trust, trustBinary);
+            trust.TrustId = hashkeyid.ToBytes();
+
+            var ecdsaSignature = new TrustECDSASignature(trust);
             var result = ecdsaSignature.VerifyTrustSignature();
 
             Assert.IsTrue(result.Count == 0);
@@ -71,7 +73,7 @@ namespace TrustbuildTest.Data
             Assert.IsTrue(trust != null);
 
             var trustBinary = new TrustBinary(trust);
-            var ecdsaSignature = new TrustECDSASignature(trust, trustBinary);
+            var ecdsaSignature = new TrustECDSASignature(trust);
             var result = ecdsaSignature.VerifyTrustSignature();
 
             Assert.IsTrue(result.Count == 0);

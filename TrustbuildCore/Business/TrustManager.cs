@@ -19,29 +19,14 @@ namespace TrustbuildCore.Business
         {
             var trust = JsonConvert.DeserializeObject<TrustModel>(content);
 
-            VerifyTrust(trust);
+            EnsureTrustId(trust, new TrustBinary(trust));
 
-            SignServerSignature(trust);
+            VerifyTrust(trust);
 
             // This is the servers task for later processing
             trust.Timestamp = null; 
 
             AddToDatabase(trust);
-        }
-
-        
-
-        public void SignServerSignature(TrustModel trust)
-        {
-            var binary = new TrustBinary(trust);
-
-            var trustHash = TrustECDSASignature.GetHashOfBinary(binary.GetIssuerBinary());
-
-            var serverkey32 = Key.Parse(App.Config["serverwif"].ToString(), App.BitcoinNetwork);
-
-            trust.Server = new ServerModel();
-            trust.Server.Id = serverkey32.PubKey.GetAddress(App.BitcoinNetwork).Hash.ToBytes();
-            trust.Server.Signature = serverkey32.SignCompact(trustHash);
         }
 
         public void AddToDatabase(TrustModel trust)
@@ -53,8 +38,8 @@ namespace TrustbuildCore.Business
             {
                 db.CreateIfNotExist();
 
-                var items = db.Trust.Select(trust.Issuer.Id, trust.Issuer.Signature);
-                if (items.Count() > 0)
+                var item = db.Trust.SelectOne(trust.TrustId);
+                if (item != null)
                     return; // The trust already exist in the db.
 
                 AddTrust(trust, db);
@@ -78,8 +63,6 @@ namespace TrustbuildCore.Business
             return datetime.ToString(App.Config["partition"].ToStringValue("yyyyMMddhh0000"));
         }
 
-
-
         public int AddTrust(TrustModel trust, TrustchainDatabase db)
         {
             var result = db.Trust.Add(trust);
@@ -89,6 +72,7 @@ namespace TrustbuildCore.Business
             foreach (var subject in trust.Issuer.Subjects)
             {
                 subject.IssuerId = trust.Issuer.Id;
+                subject.TrustId = trust.TrustId;
                 result = db.Subject.Add(subject);
                 if (result < 1)
                     break;
@@ -96,6 +80,14 @@ namespace TrustbuildCore.Business
             return result;
         }
 
+
+        public void EnsureTrustId(TrustModel trust, ITrustBinary trustBinary)
+        {
+            if (trust.TrustId != null && trust.TrustId.Length > 0)
+                return;
+
+            trust.TrustId = TrustECDSASignature.GetHashOfBinary(trustBinary.GetIssuerBinary());
+        }
 
         public void VerifyTrust(TrustModel trust)
         {
@@ -106,9 +98,7 @@ namespace TrustbuildCore.Business
                 throw new ApplicationException(msg);
             }
 
-            var binary = new TrustBinary(trust);
-
-            var signature = new TrustECDSASignature(trust, binary);
+            var signature = new TrustECDSASignature(trust);
             var errors = signature.VerifyTrustSignature();
             if (errors.Count > 0)
                 throw new ApplicationException(string.Join(". ", errors.ToArray()));
