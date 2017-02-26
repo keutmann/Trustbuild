@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace TrustchainCore.Model
 {
@@ -18,6 +19,11 @@ namespace TrustchainCore.Model
         public ServerModel Server { get; set; }
 
         [JsonProperty(PropertyName = "timestamp")]
-        public TimestampModel[] Timestamp { get; set; }
+        public Dictionary<string,TimestampModel> Timestamp { get; set; }
+
+        public TrustModel()
+        {
+            Timestamp = new Dictionary<string, TimestampModel>();
+        }
     }
 }

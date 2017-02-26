@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using NBitcoin;
+using TrustbuildCore.Service;
 using TrustchainCore.Data;
-using TrustchainCore.Workflow;
+using TrustchainCore.Extensions;
 
 namespace TrustbuildCore.Workflow
 {
@@ -15,6 +11,10 @@ namespace TrustbuildCore.Workflow
        {
             Context.Log("Timestamp of trust started");
             Context.Update();
+
+            var blockchainName = ("BTC" + ((App.BitcoinNetwork.Name.Equals(Network.Main.Name)) ? "" : "-testnet")).ToLower();
+            var hash = Package.KeyValue[blockchainName + "root"];
+
 
             using (var db = TrustchainDatabase.Open(Package.Filename))
             {
@@ -30,7 +30,7 @@ namespace TrustbuildCore.Workflow
             }
 
             Context.Log("Timestamp of trust done");
-            Context.Push(new FinalizePackageWorkflow());
+            Context.Enqueue(new FinalizePackageWorkflow());
             Context.Update();
         }
     }

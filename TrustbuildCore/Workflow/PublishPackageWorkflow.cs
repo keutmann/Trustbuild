@@ -16,7 +16,7 @@ namespace TrustbuildCore.Workflow
             Context.RandomWork();
 
             Context.Log("Package published");
-            Context.Push(new SuccessWorkflow());
+            Context.Enqueue(new SuccessWorkflow());
             Context.Update();
         }
     }

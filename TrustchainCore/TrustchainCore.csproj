@@ -75,6 +75,7 @@
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\MemoryStreamExtensions.cs" />
     <Compile Include="Extensions\SQLiteDataReaderExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IO\ErrorEventLoggerTextWriter.cs" />
     <Compile Include="IO\EventLoggerTextWriter.cs" />
     <Compile Include="Model\ClaimModel.cs" />

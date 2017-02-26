@@ -19,7 +19,7 @@ namespace TrustbuildCore.Workflow
             Context.RandomWork();
             // Move to library
             Context.Log("Package has been moved to library");
-            Context.Push(new BuildTorrentWorkflow());
+            Context.Enqueue(new BuildTorrentWorkflow());
             Context.Update();
         }
 

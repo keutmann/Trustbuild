@@ -59,7 +59,7 @@ namespace TrustchainCore.Data
             command.Parameters.Add(new SQLiteParameter("@id", subject.Id));
             command.Parameters.Add(new SQLiteParameter("@signature", subject.Signature));
             command.Parameters.Add(new SQLiteParameter("@idtype", subject.IdType));
-            command.Parameters.Add(new SQLiteParameter("@claim", subject.Claims.SerializeObject()));
+            command.Parameters.Add(new SQLiteParameter("@claim", subject.Claim.SerializeObject()));
             command.Parameters.Add(new SQLiteParameter("@cost", subject.Cost));
             command.Parameters.Add(new SQLiteParameter("@activate", subject.Activate));
             command.Parameters.Add(new SQLiteParameter("@expire", subject.Expire));
@@ -93,7 +93,7 @@ namespace TrustchainCore.Data
                 Id = reader.GetBytes("id"),
                 Signature = reader.GetBytes("signature"),
                 IdType = reader.GetString("idtype"),
-                Claims = reader.GetString("claim").DeserializeObject<ClaimModel[]>(),
+                //Claim = reader.GetString("claim").DeserializeObject<ClaimModel[]>(),
                 Cost = reader.GetInt32(5),
                 Activate = reader.GetDateTime(6),
                 Expire = reader.GetDateTime(7),

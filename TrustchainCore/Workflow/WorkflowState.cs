@@ -16,14 +16,17 @@ namespace TrustchainCore.Workflow
 
     public class WorkflowState
     {
-        public string ExecutingWorkflowName { get; set; }
+        public Queue<WorkflowBase> WorkflowQueue { get; set; }
         public WorkflowStatus Status { get; set; }
 
         public List<WorkflowLog> Log { get; set; }
+        public Dictionary<string, string> KeyValue { get; set; }
 
         public WorkflowState()
         {
+            WorkflowQueue = new Queue<WorkflowBase>();
             Log = new List<WorkflowLog>();
+            KeyValue = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
         }
     }
 }

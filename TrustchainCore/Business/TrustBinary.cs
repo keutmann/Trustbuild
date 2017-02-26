@@ -1,6 +1,7 @@
 ﻿using NBitcoin.Crypto;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.IO;
 using TrustchainCore.Extensions;
 using TrustchainCore.Model;
@@ -27,11 +28,12 @@ namespace TrustchainCore.Business
                 {
                     ms.WriteBytes(subject.Id);
                     ms.WriteString(subject.IdType);
-                    foreach (var claim in subject.Claims)
-                    {
-                        ms.WriteString(claim.Type);
-                        ms.WriteString(claim.Data);
-                    }
+
+                    //foreach (DictionaryEntry claim in subject.Claim)
+                    //{
+                    //    ms.WriteString(claim.Key);
+                    //    ms.WriteString(claim.Value);
+                    //}
                     ms.WriteInteger(subject.Cost);
                     //ms.WriteInteger(subject.Activate);
                     //ms.WriteInteger(subject.Expire);

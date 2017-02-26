@@ -41,15 +41,11 @@ namespace TrustbuildCore.Workflow
                 if (string.IsNullOrEmpty(package.Filename))
                     package.Filename = filename;
 
-                if(string.IsNullOrEmpty(package.ExecutingWorkflowName))
-                    package.ExecutingWorkflowName = typeof(ServerSignWorkflow).FullName;
-
-                // Get State from file!
-                Push(package.ExecutingWorkflowName);
+                if (package.WorkflowQueue.Count == 0)
+                    Enqueue(new ServerSignWorkflow());
 
                 Update();
             }
-
         }
 
         public override void Log(string message)

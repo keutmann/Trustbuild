@@ -30,7 +30,7 @@ namespace TrustbuildCore.Workflow
             }
 
             Context.Log("Server sign of trust done");
-            Context.Push(new BuildBitcoinMerkleWorkflow());
+            Context.Enqueue(new BuildBitcoinMerkleWorkflow());
             Context.Update();
         }
     }

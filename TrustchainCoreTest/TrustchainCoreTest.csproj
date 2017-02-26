@@ -58,6 +58,7 @@
     <Compile Include="DBTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetupFixture.cs" />
+    <Compile Include="Workflow\WorkflowStateTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

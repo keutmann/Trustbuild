@@ -10,14 +10,19 @@ using TrustbuildCore.Service;
 using TrustchainCore.Business;
 using TrustchainCore.Data;
 using TrustchainCore.Model;
-using TrustchainCore.Workflow;
+using TrustchainCore.Extensions;
 
 namespace TrustbuildCore.Workflow
 {
     public class BuildBitcoinMerkleWorkflow : WorkflowPackage
     {
+        public static string BlockchainName()
+        {
+            return ("BTC" + ((App.BitcoinNetwork.Name.Equals(Network.Main.Name)) ? "" : "-testnet")).ToLower();
+        }
+
         public override void Execute()
-       {
+        {
             Context.Log("Merkle build of trust started");
             Context.Update();
 
@@ -30,26 +35,24 @@ namespace TrustbuildCore.Workflow
 
                 var merkleTree = new MerkleTree(leafNodes);
                 var rootNode = merkleTree.Build();
-                var rootHash = rootNode.Hash;
 
-                var blockchainName = ("BTC" + ((App.BitcoinNetwork.Name.Equals(Network.Main.Name)) ? "" : "-test")).ToLower();
+                var name = BlockchainName();
+                Package.KeyValue[name + "root"] = rootNode.Hash.ConvertToHex();
 
                 foreach (var node in leafNodes)
                 {
                     var trust = (TrustModel)node.Tag;
-                    trust.Timestamp = new TimestampModel[] {
-                        new TimestampModel
-                        {
-                            Blockchain = blockchainName,
-                            HashAlgorithm = "sha160",
-                            Path = node.Path
-                        }
+                    trust.Timestamp[name] = new TimestampModel
+                    {
+                        HashAlgorithm = "sha160",
+                        Path = node.Path
                     };
+
                 }
             }
 
             Context.Log("Merkle build of trust done");
-            Context.Push(new TimeStampWorkflow());
+            Context.Enqueue(new TimeStampWorkflow());
             Context.Update();
         }
     }

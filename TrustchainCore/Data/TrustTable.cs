@@ -135,7 +135,7 @@ namespace TrustchainCore.Data
                     Id = reader.GetBytes("serverid"),
                     Signature = reader.GetBytes("serversignature")
                 },
-                Timestamp = reader.GetString("timestamp").DeserializeObject<TimestampModel[]>()
+                Timestamp = reader.GetString("timestamp").DeserializeObject<Dictionary<string,TimestampModel>>()
             };
         }
     }

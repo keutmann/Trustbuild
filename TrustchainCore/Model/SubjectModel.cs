@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +28,7 @@ namespace TrustchainCore.Model
         public byte[] Signature { get; set; }
 
         [JsonProperty(PropertyName = "claim")]
-        public ClaimModel[] Claims { get; set; }
+        public JObject Claim { get; set; }
 
         [JsonProperty(PropertyName = "cost")]
         public int Cost { get; set; }
@@ -51,5 +53,10 @@ namespace TrustchainCore.Model
         /// </summary>
         public byte[] TrustId { get; set; }
 
+
+        public SubjectModel()
+        {
+            Claim = null;
+        }
     }
 }
