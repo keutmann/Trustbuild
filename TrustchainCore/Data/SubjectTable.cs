@@ -32,8 +32,8 @@ namespace TrustchainCore.Data
                 "idtype TEXT,"+
                 "claim TEXT," +
                 "cost INTEGER," +
-                "activate DATETIME," +
-                "expire DATETIME," +
+                "activate INTEGER," +
+                "expire INTEGER," +
                 "scope TEXT," +
                 "trustid BLOB" +
                 ")";
@@ -93,11 +93,12 @@ namespace TrustchainCore.Data
                 Id = reader.GetBytes("id"),
                 Signature = reader.GetBytes("signature"),
                 IdType = reader.GetString("idtype"),
-                //Claim = reader.GetString("claim").DeserializeObject<ClaimModel[]>(),
-                Cost = reader.GetInt32(5),
-                Activate = reader.GetDateTime(6),
-                Expire = reader.GetDateTime(7),
-                Scope = reader.GetString("scope")
+                Claim = reader.GetString("claim").DeserializeObject<JObject>(),
+                Cost = reader.GetInt32(6),
+                Activate = reader.GetInt64(7),
+                Expire = reader.GetInt64(8),
+                Scope = reader.GetString("scope"),
+                TrustId = reader.GetBytes("trustid")
             };
         }
 

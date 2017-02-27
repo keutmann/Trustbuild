@@ -19,8 +19,8 @@ namespace TrustchainCoreTest.Workflow
         static WorkflowStateTest()
         {
             TestSate = new WorkflowState();
-
-            TestSate.WorkflowQueue.Enqueue(new SuccessWorkflow());
+            //TestSate.WF = typeof(SuccessWorkflow);
+            TestSate.WorkflowQueue.Enqueue(typeof(SuccessWorkflow));
             TestSate.Status = WorkflowStatus.Finished;
             TestSate.Log.Add(new WorkflowLog
             {
@@ -43,10 +43,10 @@ namespace TrustchainCoreTest.Workflow
         [Test]
         public void Deserialize()
         {
-
             var json = JsonConvert.SerializeObject(TestSate);
             var controlState = JsonConvert.DeserializeObject<WorkflowState>(json);
-            
+
+            //var instance = Activator.CreateInstance(controlState.WF);
             Assert.IsTrue(controlState != null);
             Assert.IsTrue(TestSate.WorkflowQueue.Peek().GetType().FullName == controlState.WorkflowQueue.Peek().GetType().FullName);
             Assert.IsTrue(TestSate.Status == controlState.Status);

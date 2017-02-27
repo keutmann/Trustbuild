@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Business\ITrustBinary.cs" />
     <Compile Include="Business\MerkleTree.cs" />
+    <Compile Include="Business\TrustManager.cs" />
     <Compile Include="Business\TrustSchema.cs" />
     <Compile Include="Collections\BloomFilter.cs" />
     <Compile Include="Configuration\App.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Diagnostics\TimeMe.cs" />
     <Compile Include="Extensions\AppDomainExtensions.cs" />
     <Compile Include="Extensions\ByteExtensions.cs" />
+    <Compile Include="Extensions\DatetimeExtensions.cs" />
     <Compile Include="Extensions\EncoderExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\MemoryStreamExtensions.cs" />
@@ -93,7 +95,7 @@
     <Compile Include="Workflow\SuccessWorkflow.cs" />
     <Compile Include="Workflow\WorkflowLog.cs" />
     <Compile Include="Workflow\WorkflowState.cs" />
-    <Compile Include="Workflow\Workflow.cs" />
+    <Compile Include="Workflow\WorkflowBase.cs" />
     <Compile Include="Workflow\WorkflowContext.cs" />
     <Compile Include="Workflow\WorkflowEngine.cs" />
   </ItemGroup>

@@ -14,7 +14,7 @@ namespace TrustbuildCore.Controllers
         {
             try
             {
-                var manager = new TrustManager();
+                var manager = new TrustBuildManager();
 
                 manager.AddNew(id);
 

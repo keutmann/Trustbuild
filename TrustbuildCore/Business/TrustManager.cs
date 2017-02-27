@@ -11,7 +11,7 @@ using System.IO;
 
 namespace TrustbuildCore.Business
 {
-    public class TrustManager
+    public class TrustBuildManager : TrustManager
     {
         public DateTime Timestamp = DateTime.Now;
 
@@ -63,46 +63,6 @@ namespace TrustbuildCore.Business
             return datetime.ToString(App.Config["partition"].ToStringValue("yyyyMMddhh0000"));
         }
 
-        public int AddTrust(TrustModel trust, TrustchainDatabase db)
-        {
-            var result = db.Trust.Add(trust);
-            if (result < 1)
-                return result;
 
-            foreach (var subject in trust.Issuer.Subjects)
-            {
-                subject.IssuerId = trust.Issuer.Id;
-                subject.TrustId = trust.TrustId;
-                result = db.Subject.Add(subject);
-                if (result < 1)
-                    break;
-            }
-            return result;
-        }
-
-
-        public void EnsureTrustId(TrustModel trust, ITrustBinary trustBinary)
-        {
-            if (trust.TrustId != null && trust.TrustId.Length > 0)
-                return;
-
-            trust.TrustId = TrustECDSASignature.GetHashOfBinary(trustBinary.GetIssuerBinary());
-        }
-
-        public void VerifyTrust(TrustModel trust)
-        {
-            var schema = new TrustSchema(trust);
-            if (!schema.Validate())
-            {
-                var msg = string.Join(". ", schema.Errors.ToArray());
-                throw new ApplicationException(msg);
-            }
-
-            var signature = new TrustECDSASignature(trust);
-            var errors = signature.VerifyTrustSignature();
-            if (errors.Count > 0)
-                throw new ApplicationException(string.Join(". ", errors.ToArray()));
-
-        }
     }
 }

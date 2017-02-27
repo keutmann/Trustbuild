@@ -26,8 +26,8 @@ namespace TrustbuildTest.Resources
                 ""confirm"" : ""true""
               },
           ""cost"": 100,
-          ""activate"": ""2017-02-18T23:44:41.7620108+01:00"", 
-          ""expire"":   ""2017-02-18T23:44:41+01:00"",
+          ""activate"": 0, 
+          ""expire"":   0,
           ""scope"": ""global"" 
         }
       ]

@@ -10,5 +10,10 @@ namespace TrustbuildCore.Workflow
     public class PackageState : WorkflowState
     {
         public string Filename { get; set; }
+
+        public PackageState() : base()
+        {
+
+        }
     }
 }

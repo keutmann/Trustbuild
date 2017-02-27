@@ -1,13 +1,10 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TrustbuildTest.Resources;
+using TrustchainCore.Business;
 using TrustchainCore.Data;
-using TrustchainCore.Model;
 
 namespace TrustbuildTest.Data
 {
@@ -19,11 +16,11 @@ namespace TrustbuildTest.Data
         {
             using (var db = TrustchainDatabase.Open())
             {
-                var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
+                var trust = TrustManager.Deserialize(TrustSimple.JSON);
 
                 db.AddTrust(trust);
 
-                var result = db.GetTrust(trust.Issuer.Id, trust.Issuer.Signature);
+                var result = db.Trust.SelectOne(trust.TrustId);
 
                 Assert.IsNotNull(result);
                 Assert.AreEqual(trust.Issuer.Signature, result.Issuer.Signature);

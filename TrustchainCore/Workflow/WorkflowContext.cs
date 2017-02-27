@@ -10,7 +10,7 @@ namespace TrustchainCore.Workflow
 {
     public class WorkflowContext
     {
-        public Queue<WorkflowBase> Workflows = new Queue<WorkflowBase>();
+        //public Queue<WorkflowBase> Workflows = new Queue<WorkflowBase>();
 
         //public Dictionary<string, object> KeyValueTable = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
 
@@ -18,23 +18,20 @@ namespace TrustchainCore.Workflow
 
         public virtual async Task Execute()
         {
-            var first = Workflows.Dequeue();
-            if (first == null)
-                return;
-
+            var wffirst = GetNextWorkflow();
             // Make sure that first workflow Initialize are run syncronized!
-            if (!first.Initialize())
+            if (wffirst == null || !wffirst.Initialize())
                 return;
 
             await Task.Run(() => {
                 try
                 {
                     // Now run rest as async!
-                    first.Execute();
+                    wffirst.Execute();
 
-                    while (Workflows.Count > 0) 
+                    while (State.WorkflowQueue.Count > 0) 
                     {
-                        using (var wf = Workflows.Dequeue())
+                        using (var wf = GetNextWorkflow())
                         {
                             if (wf.Initialize()) // Initialize and make sure that dependencies are ready
                                 wf.Execute();
@@ -48,10 +45,31 @@ namespace TrustchainCore.Workflow
             });
         }
 
+        public virtual WorkflowBase GetNextWorkflow()
+        {
+            if (State.WorkflowQueue.Count == 0)
+                return null;
+            var wftype = State.WorkflowQueue.Dequeue();
+            var instance = CreateInstance<WorkflowBase>(wftype);
+            instance.Context = this;
+            return instance;
+        }
+
+
+
+        public virtual T CreateInstance<T>(Type type)
+        {
+            return (T)Activator.CreateInstance(type);
+        }
+
+        public virtual void Enqueue(Type wftype)
+        {
+            State.WorkflowQueue.Enqueue(wftype);
+        }
+
         public virtual void Enqueue(WorkflowBase wf)
         {
-            wf.Context = this;
-            Workflows.Enqueue(wf);
+            State.WorkflowQueue.Enqueue(wf.GetType());
         }
 
         public virtual void SetStatus(WorkflowStatus status)

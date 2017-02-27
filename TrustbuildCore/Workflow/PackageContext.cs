@@ -30,19 +30,20 @@ namespace TrustbuildCore.Workflow
             // Load db file
             using (var db = TrustchainDatabase.Open(filename))
             {
-                var package = new PackageState();
+                
+                Package = new PackageState();
                 var json = db.KeyValue.Get("state");
                 if(json != null)
-                    package = JsonConvert.DeserializeObject<PackageState>(json);
+                    Package = JsonConvert.DeserializeObject<PackageState>(json);
 
-                if (package.Status == WorkflowStatus.Ready)
-                    package.Status = WorkflowStatus.Running;
+                if (Package.Status == WorkflowStatus.Ready)
+                    Package.Status = WorkflowStatus.Running;
 
-                if (string.IsNullOrEmpty(package.Filename))
-                    package.Filename = filename;
+                if (string.IsNullOrEmpty(Package.Filename))
+                    Package.Filename = filename;
 
-                if (package.WorkflowQueue.Count == 0)
-                    Enqueue(new ServerSignWorkflow());
+                if (Package.WorkflowQueue.Count == 0)
+                    Enqueue(typeof(ServerSignWorkflow));
 
                 Update();
             }

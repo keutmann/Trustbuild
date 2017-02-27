@@ -52,7 +52,7 @@ namespace TrustbuildCore.Workflow
             }
 
             Context.Log("Merkle build of trust done");
-            Context.Enqueue(new TimeStampWorkflow());
+            Context.Enqueue(typeof(TimeStampWorkflow));
             Context.Update();
         }
     }

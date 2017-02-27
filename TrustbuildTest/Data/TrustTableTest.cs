@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TrustbuildCore.Business;
 using TrustbuildTest.Resources;
+using TrustchainCore.Business;
 using TrustchainCore.Data;
 using TrustchainCore.Model;
 using TrustchainCore.Service;
@@ -20,11 +22,14 @@ namespace TrustbuildTest.Data
         {
             using (var db = TrustchainDatabase.Open())
             {
-                var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
+                db.Trust.DropTable();
+                db.Trust.CreateIfNotExist();
+
+                var trust = TrustManager.Deserialize(TrustSimple.JSON);
 
                 db.Trust.Add(trust);
 
-                var result = db.Trust.Select(trust.Issuer.Id, trust.Issuer.Signature).FirstOrDefault();
+                var result = db.Trust.SelectOne(trust.TrustId);
                 Assert.IsNotNull(result);
                 Assert.AreEqual(trust.Issuer.Signature, result.Issuer.Signature);
                 Assert.AreEqual(trust.Server.Signature, result.Server.Signature);
@@ -36,10 +41,11 @@ namespace TrustbuildTest.Data
         [Test]
         public void TestAddBlob()
         {
-            int numberOfTestItems = 200;
+            int numberOfTestItems = 10;
             using (var db = TrustchainDatabase.Open())
             {
-                var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
+                var trust = TrustManager.Deserialize(TrustSimple.JSON);
+
                 var ids = new List<TrustModel>();
                 using (var timer = new TimeMe("Adding Trust"))
                 {
@@ -47,6 +53,8 @@ namespace TrustbuildTest.Data
                     {
                         var id = Guid.NewGuid().ToByteArray();
                         trust.Issuer.Id = id;
+                        trust.TrustId = TrustManager.GetTrustId(trust);
+
                         ids.Add(trust);
                         db.Trust.Add(trust);
                     }
@@ -57,7 +65,7 @@ namespace TrustbuildTest.Data
                 {
                     foreach (var item in ids)
                     {
-                        var test = db.Trust.Select(item.Issuer.Id, item.Issuer.Signature).FirstOrDefault();
+                        var test = db.Trust.SelectOne(item.TrustId);
                         Assert.IsNotNull(test, "count: "+count);
                     }
                 }

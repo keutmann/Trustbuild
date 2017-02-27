@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TrustbuildTest.Resources;
+using TrustchainCore.Business;
 using TrustchainCore.Data;
 using TrustchainCore.Model;
 
@@ -19,16 +20,17 @@ namespace TrustbuildTest.Data
         {
             using (var db = TrustchainDatabase.Open())
             {
-                var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
+                var trust = TrustManager.Deserialize(TrustSimple.JSON);
 
                 foreach (var subject in trust.Issuer.Subjects)
                 {
                     subject.IssuerId = trust.Issuer.Id;
+                    subject.TrustId = trust.TrustId;
                     var addResult = db.Subject.Add(subject);
                     Assert.IsTrue(addResult > 0, "Subject was not added!");
                 }
 
-                var result = db.Subject.Select(trust.Issuer.Id);
+                var result = db.Subject.Select(trust.TrustId);
                 Assert.IsNotNull(result);
 
                 Assert.AreEqual(trust.Issuer.Subjects.Count(), result.Count());

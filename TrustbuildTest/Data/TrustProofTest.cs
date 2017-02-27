@@ -13,6 +13,7 @@ using TrustchainCore.Extensions;
 using TrustbuildTest.Resources;
 using NBitcoin.Crypto;
 using NBitcoin;
+using TrustbuildCore.Business;
 
 namespace TrustbuildTest.Data
 {
@@ -25,7 +26,7 @@ namespace TrustbuildTest.Data
         [Test]
         public void LoadTrust()
         {
-            var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
+            var trust = TrustManager.Deserialize(TrustSimple.JSON);
             Assert.IsTrue(trust != null);
             Assert.IsTrue(trust.Issuer != null);
             Assert.IsTrue(trust.Issuer.Subjects != null);
@@ -33,43 +34,43 @@ namespace TrustbuildTest.Data
         }
 
 
-        [Test]
-        public void VerfifyIssuerSignature()
-        {
-            var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
-            Assert.IsTrue(trust != null);
+        //[Test]
+        //public void VerfifyIssuerSignature()
+        //{
+        //    var trust = TrustManager.Deserialize(TrustSimple.JSON);
+        //    Assert.IsTrue(trust != null);
 
-            var key32 = new Key(Hashes.SHA256(Encoding.UTF8.GetBytes("Trustchain")));
-            var adr32 = key32.PubKey.GetAddress(Network.TestNet);
+        //    var key32 = new Key(Hashes.SHA256(Encoding.UTF8.GetBytes("Trustchain")));
+        //    var adr32 = key32.PubKey.GetAddress(Network.TestNet);
 
-            Console.WriteLine("PubKey: " + key32.PubKey.ToString());
-            Console.WriteLine("Issuer address: " + adr32.ToWif());
-            Console.WriteLine("Issuer address base64: " + Convert.ToBase64String(adr32.Hash.ToBytes()));
-            trust.Issuer.Id = adr32.Hash.ToBytes();
+        //    Console.WriteLine("PubKey: " + key32.PubKey.ToString());
+        //    Console.WriteLine("Issuer address: " + adr32.ToWif());
+        //    Console.WriteLine("Issuer address base64: " + Convert.ToBase64String(adr32.Hash.ToBytes()));
+        //    trust.Issuer.Id = adr32.Hash.ToBytes();
 
 
-            var trustBinary = new TrustBinary(trust);
-            var hashkeyid = Hashes.Hash256(Hashes.SHA256(trustBinary.GetIssuerBinary()));
-            //var hashkeyid2 = new uint256(Hashes.Hash256(trustBinary.GetIssuerBinary()));
-            //var signature = key32.SignCompact(hashkeyid);
-            trust.Issuer.Signature = key32.SignCompact(hashkeyid);
-            Console.WriteLine("Issuer signature: "+Convert.ToBase64String(trust.Issuer.Signature));
+        //    var trustBinary = new TrustBinary(trust);
+        //    var hashkeyid = Hashes.Hash256(Hashes.SHA256(trustBinary.GetIssuerBinary()));
+        //    //var hashkeyid2 = new uint256(Hashes.Hash256(trustBinary.GetIssuerBinary()));
+        //    //var signature = key32.SignCompact(hashkeyid);
+        //    trust.Issuer.Signature = key32.SignCompact(hashkeyid);
+        //    Console.WriteLine("Issuer signature: "+Convert.ToBase64String(trust.Issuer.Signature));
 
-            //var recoverAdr = PubKey.RecoverCompact(hashkeyid, trust.Signature.Issuer);
-            //bool result = recoverAdr.Hash.ToBytes().Compare(trust.Issuer.Id) == 0; // == adr32.Hash;
+        //    //var recoverAdr = PubKey.RecoverCompact(hashkeyid, trust.Signature.Issuer);
+        //    //bool result = recoverAdr.Hash.ToBytes().Compare(trust.Issuer.Id) == 0; // == adr32.Hash;
 
-            trust.TrustId = hashkeyid.ToBytes();
+        //    trust.TrustId = hashkeyid.ToBytes();
 
-            var ecdsaSignature = new TrustECDSASignature(trust);
-            var result = ecdsaSignature.VerifyTrustSignature();
+        //    var ecdsaSignature = new TrustECDSASignature(trust);
+        //    var result = ecdsaSignature.VerifyTrustSignature();
 
-            Assert.IsTrue(result.Count == 0);
-        }
+        //    Assert.IsTrue(result.Count == 0);
+        //}
 
         [Test]
         public void VerfifyTrustSignature()
         {
-            var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.JSON);
+            var trust = TrustManager.Deserialize(TrustSimple.JSON);
             Assert.IsTrue(trust != null);
 
             var trustBinary = new TrustBinary(trust);

@@ -1,6 +1,7 @@
 ﻿using NBitcoin.Crypto;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Collections;
 using System.IO;
 using TrustchainCore.Extensions;
@@ -29,14 +30,19 @@ namespace TrustchainCore.Business
                     ms.WriteBytes(subject.Id);
                     ms.WriteString(subject.IdType);
 
+                    foreach (JProperty prop in subject.Claim.Children().OfType<JProperty>())
+                    {
+                        ms.WriteString(prop.Name.ToLower());
+                        ms.WriteString(prop.Value.ToStringValue());
+                    }
                     //foreach (DictionaryEntry claim in subject.Claim)
                     //{
                     //    ms.WriteString(claim.Key);
                     //    ms.WriteString(claim.Value);
                     //}
                     ms.WriteInteger(subject.Cost);
-                    //ms.WriteInteger(subject.Activate);
-                    //ms.WriteInteger(subject.Expire);
+                    ms.WriteLong(subject.Activate);
+                    ms.WriteLong(subject.Expire);
                     ms.WriteString(subject.Scope);
                 }
 

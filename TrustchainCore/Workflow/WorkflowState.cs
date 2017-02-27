@@ -16,7 +16,7 @@ namespace TrustchainCore.Workflow
 
     public class WorkflowState
     {
-        public Queue<WorkflowBase> WorkflowQueue { get; set; }
+        public Queue<Type> WorkflowQueue { get; set; }
         public WorkflowStatus Status { get; set; }
 
         public List<WorkflowLog> Log { get; set; }
@@ -24,7 +24,7 @@ namespace TrustchainCore.Workflow
 
         public WorkflowState()
         {
-            WorkflowQueue = new Queue<WorkflowBase>();
+            WorkflowQueue = new Queue<Type>();
             Log = new List<WorkflowLog>();
             KeyValue = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
         }

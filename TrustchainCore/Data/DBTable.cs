@@ -53,10 +53,10 @@ namespace TrustchainCore.Data
             return (int)result["count"];
         }
 
-        public void DropTable()
+        public int DropTable()
         {
-            var command = new SQLiteCommand("DROP TABLE " + TableName, Connection);
-            command.ExecuteNonQuery();
+            var command = new SQLiteCommand("DROP TABLE IF EXISTS " + TableName, Connection);
+            return command.ExecuteNonQuery();
         }
     }
 }

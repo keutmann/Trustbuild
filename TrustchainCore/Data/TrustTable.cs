@@ -18,10 +18,10 @@ namespace TrustchainCore.Data
             TableName = tableName;
         }
 
-        public void CreateIfNotExist()
+        public int CreateIfNotExist()
         {
             if (TableExist())
-                return;
+                return 0;
 
             var  sql = "CREATE TABLE IF NOT EXISTS " + TableName + " " +
                 "(" +
@@ -35,20 +35,20 @@ namespace TrustchainCore.Data
                 "timestamp TEXT"+
                 ") WITHOUT ROWID";
             var command = new SQLiteCommand(sql, Connection);
-            command.ExecuteNonQuery();
+            var result = command.ExecuteNonQuery();
 
             command = new SQLiteCommand("CREATE UNIQUE INDEX IF NOT EXISTS " + TableName+ "IssuerId ON " + TableName + " (issuerid ,issuersignature)", Connection);
             command.ExecuteNonQuery();
 
             //command = new SQLiteCommand("CREATE INDEX IF NOT EXISTS " + TableName + "IssuerSignature ON " + TableName + " (issuersignature)", Connection);
             //command.ExecuteNonQuery();
-
+            return result;
         }
 
         public int Add(TrustModel trust)
         {
-            var command = new SQLiteCommand("INSERT INTO " + TableName + " (trustid, version, script, issuerid, issuersignature, serverid, serversignature, timestamp) "+ 
-                "VALUES (@version, @script, @issuerid, @issuersignature, @serverid, @serversignature, @timestamp)", Connection);
+            var command = new SQLiteCommand("INSERT INTO " + TableName + " (trustid, version, script, issuerid, issuersignature, serverid, serversignature, timestamp) "+
+                "VALUES (@trustid, @version, @script, @issuerid, @issuersignature, @serverid, @serversignature, @timestamp)", Connection);
             command.Parameters.Add(new SQLiteParameter("@trustid", trust.TrustId));
             command.Parameters.Add(new SQLiteParameter("@version", trust.Head.Version));
             command.Parameters.Add(new SQLiteParameter("@script", trust.Head.Script));
