@@ -16,7 +16,7 @@ namespace TrustbuildCore.Workflow
             // Simulate work by spinning
             Context.RandomWork();
             Context.Log("Package torrent created");
-            Context.Enqueue(new PublishPackageWorkflow());
+            Context.Enqueue(typeof(PublishPackageWorkflow));
             Context.Update();
         }
     }

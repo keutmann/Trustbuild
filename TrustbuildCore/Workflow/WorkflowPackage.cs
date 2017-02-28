@@ -9,15 +9,15 @@ namespace TrustbuildCore.Workflow
 {
     public class WorkflowPackage : WorkflowBase
     {
-        public PackageState Package
+        public PackageContext Package
         {
             get
             {
-                return (PackageState)Context.State;
+                return (PackageContext)Context;
             }
             set
             {
-                Context.State = value;
+                Context= value;
             }
         }
     }

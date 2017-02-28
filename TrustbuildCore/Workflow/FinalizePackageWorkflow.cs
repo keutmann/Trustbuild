@@ -8,18 +8,20 @@ using TrustchainCore.Workflow;
 
 namespace TrustbuildCore.Workflow
 {
-    public class FinalizePackageWorkflow : WorkflowBase
+    public class FinalizePackageWorkflow : WorkflowPackage
     {
         
         public override void Execute()
         {
             // Compact file
-            Context.Log(string.Format("Package {0} has been compacted", ((PackageState)Context.State).Filename));
+            Context.Log(string.Format("Package {0} has been compacted", ((PackageContext)Context).Filename));
 
+
+            //Package.Filename
             Context.RandomWork();
             // Move to library
             Context.Log("Package has been moved to library");
-            Context.Enqueue(new BuildTorrentWorkflow());
+            Context.Enqueue(typeof(BuildTorrentWorkflow));
             Context.Update();
         }
 

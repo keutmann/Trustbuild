@@ -77,7 +77,6 @@
     <Compile Include="Workflow\ServerSignWorkflow.cs" />
     <Compile Include="Workflow\TimeStampWorkflow.cs" />
     <Compile Include="Workflow\PackageContext.cs" />
-    <Compile Include="Workflow\PackageState.cs" />
     <Compile Include="Workflow\PackageEngine.cs" />
     <Compile Include="Workflow\WorkflowPackage.cs" />
   </ItemGroup>

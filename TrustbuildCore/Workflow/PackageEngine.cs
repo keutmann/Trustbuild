@@ -13,7 +13,7 @@ namespace TrustbuildCore.Workflow
         {
             foreach (var file in packages)
             {
-                Tasks.Add(new PackageContext(file));
+                Tasks.Add(PackageContext.Create(file));
             }
         }
     }

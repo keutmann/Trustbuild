@@ -1,20 +1,34 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using TrustchainCore.Extensions;
 
 namespace TrustchainCore.Workflow
 {
+    public enum WorkflowStatus : int
+    {
+        Ready,
+        Running,
+        Finished,
+        Failed
+    }
+
     public class WorkflowContext
     {
-        //public Queue<WorkflowBase> Workflows = new Queue<WorkflowBase>();
+        public Queue<Type> WorkflowQueue { get; set; }
+        public WorkflowStatus Status { get; set; }
 
-        //public Dictionary<string, object> KeyValueTable = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+        public List<WorkflowLog> Logs { get; set; }
+        public Dictionary<string, string> KeyValue { get; set; }
 
-        public virtual WorkflowState State { get; set; }
+        public WorkflowContext()
+        {
+            WorkflowQueue = new Queue<Type>();
+            Logs = new List<WorkflowLog>();
+            KeyValue = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+        }
 
         public virtual async Task Execute()
         {
@@ -29,7 +43,7 @@ namespace TrustchainCore.Workflow
                     // Now run rest as async!
                     wffirst.Execute();
 
-                    while (State.WorkflowQueue.Count > 0) 
+                    while (WorkflowQueue.Count > 0)
                     {
                         using (var wf = GetNextWorkflow())
                         {
@@ -47,11 +61,10 @@ namespace TrustchainCore.Workflow
 
         public virtual WorkflowBase GetNextWorkflow()
         {
-            if (State.WorkflowQueue.Count == 0)
+            if (WorkflowQueue.Count == 0)
                 return null;
-            var wftype = State.WorkflowQueue.Dequeue();
+            var wftype = WorkflowQueue.Dequeue();
             var instance = CreateInstance<WorkflowBase>(wftype);
-            instance.Context = this;
             return instance;
         }
 
@@ -64,17 +77,17 @@ namespace TrustchainCore.Workflow
 
         public virtual void Enqueue(Type wftype)
         {
-            State.WorkflowQueue.Enqueue(wftype);
+            WorkflowQueue.Enqueue(wftype);
         }
 
         public virtual void Enqueue(WorkflowBase wf)
         {
-            State.WorkflowQueue.Enqueue(wf.GetType());
+            WorkflowQueue.Enqueue(wf.GetType());
         }
 
         public virtual void SetStatus(WorkflowStatus status)
         {
-            State.Status = status;
+            Status = status;
         }
 
         public virtual void Update()
@@ -83,7 +96,7 @@ namespace TrustchainCore.Workflow
 
         public virtual void Log(string message)
         {
-            State.Log.Add(new WorkflowLog { Message = message });
+            Logs.Add(new WorkflowLog { Message = message });
         }
 
 
@@ -93,7 +106,5 @@ namespace TrustchainCore.Workflow
             int i = rand.Next(1000000);
             Thread.SpinWait(i);
         }
-
-
     }
 }

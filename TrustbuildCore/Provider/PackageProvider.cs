@@ -43,7 +43,7 @@ namespace TrustbuildCore.Provider
                 using (var db = TrustchainDatabase.Open(name))
                 {
                     var json = db.KeyValue.Get("state");
-                    var state = JsonConvert.DeserializeObject<WorkflowState>(json);
+                    var state = JsonConvert.DeserializeObject<WorkflowContext>(json);
                     if (state.Status == status)
                         list.Add(name);
                 }

@@ -94,9 +94,8 @@
     <Compile Include="Security\Cryptography\Crypto.cs" />
     <Compile Include="Workflow\SuccessWorkflow.cs" />
     <Compile Include="Workflow\WorkflowLog.cs" />
-    <Compile Include="Workflow\WorkflowState.cs" />
-    <Compile Include="Workflow\WorkflowBase.cs" />
     <Compile Include="Workflow\WorkflowContext.cs" />
+    <Compile Include="Workflow\WorkflowBase.cs" />
     <Compile Include="Workflow\WorkflowEngine.cs" />
   </ItemGroup>
   <ItemGroup>

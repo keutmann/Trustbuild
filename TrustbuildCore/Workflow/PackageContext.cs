@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using TrustchainCore.Data;
 using TrustchainCore.Workflow;
@@ -12,29 +11,22 @@ namespace TrustbuildCore.Workflow
 {
     public class PackageContext : WorkflowContext
     {
+        public string Filename { get; set; }
 
-        public PackageState Package
+        public PackageContext() : base()
         {
-            get
-            {
-                return (PackageState)State;
-            }
-            set
-            {
-                State = value;
-            }
+
         }
 
-        public PackageContext(string filename)
+        public static WorkflowContext Create(string filename) 
         {
+            var Package = new PackageContext();
             // Load db file
             using (var db = TrustchainDatabase.Open(filename))
             {
-                
-                Package = new PackageState();
                 var json = db.KeyValue.Get("state");
-                if(json != null)
-                    Package = JsonConvert.DeserializeObject<PackageState>(json);
+                if (json != null)
+                    Package = JsonConvert.DeserializeObject<PackageContext>(json);
 
                 if (Package.Status == WorkflowStatus.Ready)
                     Package.Status = WorkflowStatus.Running;
@@ -43,10 +35,11 @@ namespace TrustbuildCore.Workflow
                     Package.Filename = filename;
 
                 if (Package.WorkflowQueue.Count == 0)
-                    Enqueue(typeof(ServerSignWorkflow));
+                    Package.Enqueue(typeof(ServerSignWorkflow));
 
-                Update();
+                Package.Update();
             }
+            return Package;
         }
 
         public override void Log(string message)
@@ -57,11 +50,12 @@ namespace TrustbuildCore.Workflow
 
         public override void Update()
         {
-            using (var db = TrustchainDatabase.Open(Package.Filename))
+            using (var db = TrustchainDatabase.Open(Filename))
             {
-                db.KeyValue.Put("state", JsonConvert.SerializeObject(Package));
+                db.KeyValue.Put("state", JsonConvert.SerializeObject(this));
             }
 
         }
+
     }
 }
