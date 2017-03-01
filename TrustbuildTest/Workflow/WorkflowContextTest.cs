@@ -1,10 +1,7 @@
 ﻿using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TrustbuildCore.Workflow;
+using TrustchainCore.Workflow;
 
 namespace TrustbuildTest.Workflow
 {
@@ -17,9 +14,8 @@ namespace TrustbuildTest.Workflow
             var list = new List<string>() { "test.db", "test2.dk" };
 
             var engine = new PackageEngine(list);
-            engine.Execute();
-
-            Assert.IsTrue(true);
+            Assert.IsTrue(engine.Tasks.Count > 0);
+            Assert.IsTrue(engine.Tasks[0].Status == WorkflowStatus.Running);
         }
     }
 }

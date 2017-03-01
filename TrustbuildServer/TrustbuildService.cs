@@ -6,13 +6,9 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Web.Http;
-using TrustbuildCore.Business;
-using TrustbuildCore.Provider;
 using TrustbuildCore.Service;
-using TrustbuildCore.Workflow;
 using TrustchainCore.Data;
 using TrustchainCore.Extensions;
-using TrustchainCore.Workflow;
 
 namespace TrustbuildServer
 {
@@ -60,7 +56,6 @@ namespace TrustbuildServer
             public void Configuration(IAppBuilder appBuilder)
             {
                 var config = new HttpConfiguration();
-                //config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
                 config.Formatters.Add(new BrowserJsonFormatter());
 
                 config.Routes.MapHttpRoute(
@@ -103,13 +98,6 @@ namespace TrustbuildServer
         public void Execute()
         {
             Console.WriteLine(DateTime.Now.ToLocalTime() + " : Processing...");
-
-            //var manager = new TrustManager();
-            //var provider = new PackageProvider(manager.GetCurrentDBTrustname());
-            //var packages = provider.GetBuildPackages(WorkflowStatus.Ready);
-            //var engine = new PackageEngine(packages);
-
-            //engine.Execute();
         }
 
         public void Pause()

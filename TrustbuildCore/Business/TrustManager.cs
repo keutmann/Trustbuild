@@ -15,7 +15,7 @@ namespace TrustbuildCore.Business
     {
         public DateTime Timestamp = DateTime.Now;
 
-        public void AddNew(string content)
+        public TrustModel AddNew(string content)
         {
             var trust = JsonConvert.DeserializeObject<TrustModel>(content);
 
@@ -27,6 +27,8 @@ namespace TrustbuildCore.Business
             trust.Timestamp = null; 
 
             AddToDatabase(trust);
+
+            return trust;
         }
 
         public void AddToDatabase(TrustModel trust)
