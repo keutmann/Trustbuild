@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,13 +22,13 @@ namespace TrustchainCore.Workflow
         public WorkflowStatus Status { get; set; }
 
         public List<WorkflowLog> Logs { get; set; }
-        public Dictionary<string, string> KeyValue { get; set; }
+        public Dictionary<string, object> KeyValue { get; set; }
 
         public WorkflowContext()
         {
             WorkflowQueue = new Queue<Type>();
             Logs = new List<WorkflowLog>();
-            KeyValue = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            KeyValue = new Dictionary<string, object>(StringComparer.InvariantCultureIgnoreCase);
         }
 
         public virtual async Task Execute()
@@ -48,7 +49,10 @@ namespace TrustchainCore.Workflow
                         using (var wf = GetNextWorkflow())
                         {
                             if (wf.Initialize()) // Initialize and make sure that dependencies are ready
+                            {
                                 wf.Execute();
+                                Update();
+                            }
                         }
                     }
                 }
@@ -64,8 +68,11 @@ namespace TrustchainCore.Workflow
             if (WorkflowQueue.Count == 0)
                 return null;
             var wftype = WorkflowQueue.Dequeue();
-            var instance = CreateInstance<WorkflowBase>(wftype);
-            return instance;
+            
+            if (!string.IsNullOrEmpty(KeyValue[wftype.Name] as string))
+                return (WorkflowBase)JsonConvert.DeserializeObject(KeyValue[wftype.Name] as string);
+            else
+                return CreateInstance<WorkflowBase>(wftype);
         }
 
 
@@ -78,16 +85,6 @@ namespace TrustchainCore.Workflow
         public virtual void Enqueue(Type wftype)
         {
             WorkflowQueue.Enqueue(wftype);
-        }
-
-        public virtual void Enqueue(WorkflowBase wf)
-        {
-            WorkflowQueue.Enqueue(wf.GetType());
-        }
-
-        public virtual void SetStatus(WorkflowStatus status)
-        {
-            Status = status;
         }
 
         public virtual void Update()

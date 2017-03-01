@@ -4,9 +4,8 @@
     {
         public override void Execute()
         {
-            Context.SetStatus(WorkflowStatus.Finished);
+            Context.Status = WorkflowStatus.Finished;
             Context.Log("Workflow completed successfully");
-            Context.Update();
         }
     }
 }

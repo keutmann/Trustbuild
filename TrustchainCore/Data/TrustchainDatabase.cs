@@ -167,6 +167,12 @@ namespace TrustchainCore.Data
             return result;
         }
 
+        public int Vacuum()
+        {
+            SQLiteCommand command = new SQLiteCommand("vacuum;", Connection);
+            return command.ExecuteNonQuery();
+        }
+
         public TrustModel GetTrust(byte[] issuerid, byte[] issuersignature)
         {
             var result = Trust.Select(issuerid, issuersignature).FirstOrDefault();

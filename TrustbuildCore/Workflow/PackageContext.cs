@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +14,15 @@ namespace TrustbuildCore.Workflow
     {
         public string Filename { get; set; }
 
+        public string TimestampName { get; set; }
+        public byte[] RootHash { get; set; }
+        public byte[] RootPath { get; set; }
+
+        public int ProofWaitCount { get; set; }
+
+
         public PackageContext() : base()
         {
-
         }
 
         public static WorkflowContext Create(string filename) 
@@ -50,6 +57,9 @@ namespace TrustbuildCore.Workflow
 
         public override void Update()
         {
+            if (!File.Exists(Filename))
+                return;
+
             using (var db = TrustchainDatabase.Open(Filename))
             {
                 db.KeyValue.Put("state", JsonConvert.SerializeObject(this));

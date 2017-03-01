@@ -35,14 +35,14 @@ namespace TrustbuildCore.Workflow
 
                 var merkleTree = new MerkleTree(leafNodes);
                 var rootNode = merkleTree.Build();
+                Package.RootHash = rootNode.Hash;
 
-                var name = BlockchainName();
-                Package.KeyValue[name + "root"] = rootNode.Hash.ConvertToHex();
+                Package.TimestampName = BlockchainName();
 
                 foreach (var node in leafNodes)
                 {
                     var trust = (TrustModel)node.Tag;
-                    trust.Timestamp[name] = new TimestampModel
+                    trust.Timestamp[Package.TimestampName] = new TimestampModel
                     {
                         HashAlgorithm = "sha160",
                         Path = node.Path
@@ -52,8 +52,7 @@ namespace TrustbuildCore.Workflow
             }
 
             Context.Log("Merkle build of trust done");
-            Context.Enqueue(typeof(TimeStampWorkflow));
-            Context.Update();
+            Context.Enqueue(typeof(TimeStampAddWorkflow));
         }
     }
 }

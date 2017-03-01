@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\DirectoryManager.cs" />
     <Compile Include="Business\ITrustBinary.cs" />
     <Compile Include="Business\MerkleTree.cs" />
     <Compile Include="Business\TrustManager.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Extensions\MemoryStreamExtensions.cs" />
     <Compile Include="Extensions\SQLiteDataReaderExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\UriExtensions.cs" />
     <Compile Include="IO\ErrorEventLoggerTextWriter.cs" />
     <Compile Include="IO\EventLoggerTextWriter.cs" />
     <Compile Include="Model\ClaimModel.cs" />
@@ -92,6 +94,10 @@
     <Compile Include="Data\DBTable.cs" />
     <Compile Include="Data\TrustchainDatabase.cs" />
     <Compile Include="Security\Cryptography\Crypto.cs" />
+    <Compile Include="Service\TruststampService.cs" />
+    <Compile Include="Service\WebService.cs" />
+    <Compile Include="Workflow\SleepWorkflow.cs" />
+    <Compile Include="Workflow\FailueWorkflow.cs" />
     <Compile Include="Workflow\SuccessWorkflow.cs" />
     <Compile Include="Workflow\WorkflowLog.cs" />
     <Compile Include="Workflow\WorkflowContext.cs" />
