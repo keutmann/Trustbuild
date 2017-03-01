@@ -88,13 +88,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\TrustchainCore\TrustchainCore\TrustchainCore.csproj">
+      <Project>{fcf1df17-a500-4858-8908-cf691c1c2dac}</Project>
+      <Name>TrustchainCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TrustbuildCore\TrustbuildCore.csproj">
       <Project>{768a6e1d-96ee-4cf4-8909-0d6e1df2e7ae}</Project>
       <Name>TrustbuildCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TrustchainCore\TrustchainCore.csproj">
-      <Project>{d81f9786-23cc-4cd3-9720-3651625ad4f9}</Project>
-      <Name>TrustchainCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
