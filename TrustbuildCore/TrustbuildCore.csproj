@@ -68,7 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\ServerIdentity.cs" />
-    <Compile Include="Business\TrustManager.cs" />
+    <Compile Include="Business\TrustBuildManager.cs" />
     <Compile Include="Controllers\TrustController.cs" />
     <Compile Include="Data\TrustbuildDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
