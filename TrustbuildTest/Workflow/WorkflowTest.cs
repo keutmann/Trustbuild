@@ -18,6 +18,33 @@ namespace TrustbuildTest.Workflow
     [TestFixture]
     public class WorkflowTest
     {
+        [SetUp]
+        public void Setup()
+        {
+
+            var serverKey = new Key(Hashes.SHA256(Encoding.UTF8.GetBytes("server")));
+            App.Config["serverwif"] = serverKey.GetBitcoinSecret(App.BitcoinNetwork).ToWif();
+
+            // Using in memory db make sure that tables exist
+            using (var db = TrustchainDatabase.Open()) 
+            {
+                db.Trust.CreateIfNotExist();
+                db.KeyValue.CreateIfNotExist();
+            }
+
+        }
+
+        [TearDown]
+        public void Teardown()
+        {
+            // Using in memory db make sure that tables are deleted before next test
+            using (var db = TrustchainDatabase.Open()) 
+            {
+                db.Trust.DropTable();
+                db.KeyValue.DropTable();
+            }
+        }
+
         public TrustModel CreateATrust(string issuerName, string subjectName)
         {
             var issuerKey = new Key(Hashes.SHA256(Encoding.UTF8.GetBytes(issuerName)));
@@ -55,13 +82,9 @@ namespace TrustbuildTest.Workflow
         [Test]
         public void ServerSignWorkflowTest()
         {
-            var serverKey = new Key(Hashes.SHA256(Encoding.UTF8.GetBytes("server")));
-            App.Config["serverwif"] = serverKey.GetBitcoinSecret(App.BitcoinNetwork).ToWif();
             var manager = new TrustBuildManager();
             var trust = CreateATrust("issuer", "subject");
-            var json = JsonConvert.SerializeObject(trust);
-
-            trust = manager.AddNew(json);
+            trust = manager.AddNew(JsonConvert.SerializeObject(trust));
 
             // Execute
             var wf = new ServerSignWorkflow();
@@ -82,8 +105,82 @@ namespace TrustbuildTest.Workflow
 
         }
 
+        [Test]
+        public void BuildBitcoinMerkleWorkflowTest()
+        {
+            // Setup
+            var manager = new TrustBuildManager();
+            var trust1 = manager.AddNew(JsonConvert.SerializeObject(CreateATrust("issuer1", "subject1")));
+            var trust2 = manager.AddNew(JsonConvert.SerializeObject(CreateATrust("issuer2", "subject2")));
+            var trust3 = manager.AddNew(JsonConvert.SerializeObject(CreateATrust("issuer3", "subject3")));
 
+            // Execute
+            var wf = new BuildBitcoinMerkleWorkflow();
+            wf.Context = new PackageContext();
+            Assert.IsTrue(wf.Initialize());
+            wf.Execute();
 
+            // Verify
+            using (var db = TrustchainDatabase.Open()) // Using in memory db.
+            {
+                var trusts = db.Trust.Select();
+                foreach (var trust in trusts)
+                {
+                    Assert.NotNull(trust);
+                    Assert.NotNull(trust.Timestamp);
+                    var btc = trust.Timestamp[wf.Package.TimestampName];
 
+                    Assert.NotNull(btc);
+                    Assert.NotNull(btc.Path);
+                    Assert.IsTrue(btc.Path.Length > 0);
+                    System.Console.WriteLine("Path: "+ btc.Path.ConvertToHex());
+                }
+            }
+        }
+
+        [Test]
+        public void TimeStampUpdateWorkflowTest()
+        {
+            // Setup
+            var manager = new TrustBuildManager();
+            var trust1 = manager.AddNew(JsonConvert.SerializeObject(CreateATrust("issuer1", "subject1")));
+            var trust2 = manager.AddNew(JsonConvert.SerializeObject(CreateATrust("issuer2", "subject2")));
+            var trust3 = manager.AddNew(JsonConvert.SerializeObject(CreateATrust("issuer3", "subject3")));
+
+            // Build up path and root
+            var mwf = new BuildBitcoinMerkleWorkflow();
+            mwf.Context = new PackageContext();
+            mwf.Initialize();
+            mwf.Execute();
+
+            // Execute
+            var wf = new TimeStampUpdateWorkflow();
+            wf.Context = mwf.Context;
+            wf.Package.RootPath = wf.Package.RootHash;
+            Assert.IsTrue(wf.Initialize());
+            wf.Execute();
+
+            // Verify
+            using (var db = TrustchainDatabase.Open()) // Using in memory db.
+            {
+                var trusts = db.Trust.Select();
+                foreach (var trust in trusts)
+                {
+                    Assert.NotNull(trust);
+                    Assert.NotNull(trust.Timestamp);
+                    var btc = trust.Timestamp[wf.Package.TimestampName];
+
+                    Assert.NotNull(btc);
+                    Assert.NotNull(btc.Path);
+                    Assert.IsTrue(btc.Path.Length > 0);
+                    System.Console.WriteLine("Path: " + btc.Path.ConvertToHex());
+                }
+            }
+        }
+
+        [Test]
+        public void BuildTorrentWorkflowTest()
+        {
+        }
     }
 }

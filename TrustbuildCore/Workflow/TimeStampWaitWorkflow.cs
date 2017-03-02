@@ -20,6 +20,7 @@ namespace TrustbuildCore.Workflow
 
             if (!result["path"].HasValues)
             {
+                Package.ProofWaitCount++;
                 if (Package.ProofWaitCount > 36)
                 {
                     Package.Log("Timeout on Timestamp service.");

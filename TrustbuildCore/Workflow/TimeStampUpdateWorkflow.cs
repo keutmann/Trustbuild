@@ -21,15 +21,17 @@ namespace TrustbuildCore.Workflow
             {
 
                 var trusts = db.Trust.Select();
-                foreach (var item in trusts)
+                foreach (var trust in trusts)
                 {
-                    if (item.Timestamp == null)
+                    if (trust.Timestamp == null)
                         continue;
 
-                    if (!item.Timestamp.ContainsKey(name))
+                    if (!trust.Timestamp.ContainsKey(name))
                         continue;
 
-                    item.Timestamp[name].Path = Package.RootPath.Combine(item.Timestamp[name].Path);
+                    trust.Timestamp[name].Path = Package.RootPath.Combine(trust.Timestamp[name].Path);
+
+                    db.Trust.Replace(trust);
                 }
             }
 

@@ -9,9 +9,7 @@ namespace TrustbuildCore.Workflow
     {
         public override void Execute()
         {
-            var dirManager = new DirectoryManager();
-            
-            CreateTorrent(Package.Filename, dirManager.GetTorrentFolder());
+            CreateTorrent(Package.Filename, AppDirectory.TorrentPath);
 
             Context.Log("Package torrent created");
             Context.Enqueue(typeof(PublishPackageWorkflow));

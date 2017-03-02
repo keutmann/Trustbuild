@@ -31,6 +31,11 @@ namespace TrustbuildCore.Business
             return trust;
         }
 
+        //public TrustModel AddNew(TrustModel trust)
+        //{
+
+        //}
+
         public void AddToDatabase(TrustModel trust)
         {
             var dbname = GetCurrentDBTrustname(trust.Server.Id);

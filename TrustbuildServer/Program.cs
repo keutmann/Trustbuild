@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Topshelf;
 using TrustbuildCore.Service;
+using TrustchainCore.Business;
 using TrustchainCore.Extensions;
 
 namespace TrustbuildServer
@@ -30,6 +31,9 @@ namespace TrustbuildServer
             App.LoadConfigFile("config.json");
             if (App.Config["eventlog"].ToBoolean() == true)
                 App.EnableEventLogger();
+
+            // Ensure AppData directories
+            AppDirectory.Setup();
 
             // Only when we need to create a config file. 
             //App.SaveConfigFile("config.json");

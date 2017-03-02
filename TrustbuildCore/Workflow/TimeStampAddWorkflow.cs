@@ -18,7 +18,7 @@ namespace TrustbuildCore.Workflow
             var result = stampService.AddProof(Package.RootHash);
 
             if (!result["hash"].HasValues)
-                throw new ApplicationException("Error missing hash from AddProof!!!!!!");
+                throw new ApplicationException("Error missing hash from AddProof");
 
             Context.Log("Timestamp of trust submitted");
             Context.Enqueue(typeof(TimeStampWaitWorkflow));

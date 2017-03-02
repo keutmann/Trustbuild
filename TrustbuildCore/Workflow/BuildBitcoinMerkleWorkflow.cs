@@ -42,12 +42,16 @@ namespace TrustbuildCore.Workflow
                 foreach (var node in leafNodes)
                 {
                     var trust = (TrustModel)node.Tag;
+                    if (trust.Timestamp == null)
+                        trust.Timestamp = new TimestampCollection(); 
+
                     trust.Timestamp[Package.TimestampName] = new TimestampModel
                     {
                         HashAlgorithm = "sha160",
                         Path = node.Path
                     };
 
+                    db.Trust.Replace(trust);
                 }
             }
 

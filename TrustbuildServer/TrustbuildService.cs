@@ -38,7 +38,7 @@ namespace TrustbuildServer
 
         public void Start()
         {
-            var url = "http://" + App.Config["endpoint"] + ":" + App.Config["port"]+ "/";
+            var url = "http://" + App.Config["endpoint"].ToStringValue("localhost") + ":" + App.Config["port"].ToInteger(12701)+ "/";
             _webApp = WebApp.Start<StartOwin>(url);
 
             using (var db = TrustchainDatabase.Open())
