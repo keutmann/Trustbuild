@@ -13,6 +13,7 @@ namespace TrustbuildCore.Workflow
     public class PackageContext : WorkflowContext
     {
         public string Filename { get; set; }
+        public string FilePath { get; set; }
 
         public string TimestampName { get; set; }
         public byte[] RootHash { get; set; }

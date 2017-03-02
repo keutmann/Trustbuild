@@ -1,5 +1,7 @@
 ﻿using MonoTorrent;
 using MonoTorrent.Common;
+using System;
+using System.IO;
 using TrustbuildCore.Business;
 using TrustchainCore.Business;
 
@@ -9,7 +11,11 @@ namespace TrustbuildCore.Workflow
     {
         public override void Execute()
         {
-            CreateTorrent(Package.Filename, AppDirectory.TorrentPath);
+            GC.Collect(); // Release old connections, to make sure that the file is not locked
+
+            //var name = new FileInfo(Package.Filename).Name;
+            var savePath = Path.Combine(AppDirectory.TorrentPath, Package.Filename).Replace(".trust", ".torrent");
+            CreateTorrent(Package.FilePath, savePath);
 
             Context.Log("Package torrent created");
             Context.Enqueue(typeof(PublishPackageWorkflow));
@@ -28,6 +34,8 @@ namespace TrustbuildCore.Workflow
             c.Comment = "This is a Trust package";
             c.CreatedBy = ServerIdentity.Current.Address.ToWif();
             c.Publisher = "Trustchain";
+            c.PieceLength = 64 * 1024;
+
 
             // Set the torrent as private so it will not use DHT or peer exchange
             // Generally you will not want to set this.
@@ -53,7 +61,8 @@ namespace TrustbuildCore.Workflow
 
             Check.SavePath(savePath);
 
-            ITorrentFileSource fileSource = new TorrentFileSource(path);
+            TorrentFileSource fileSource = new TorrentFileSource(path);
+            
             // Create the torrent file and save it directly to the specified path
             // Different overloads of 'Create' can be used to save the data to a Stream
             // or just return it as a BEncodedDictionary (its native format) so it can be

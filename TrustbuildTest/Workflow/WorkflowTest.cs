@@ -45,7 +45,7 @@ namespace TrustbuildTest.Workflow
             }
         }
 
-        public TrustModel CreateATrust(string issuerName, string subjectName)
+        public static TrustModel CreateATrust(string issuerName, string subjectName)
         {
             var issuerKey = new Key(Hashes.SHA256(Encoding.UTF8.GetBytes(issuerName)));
             var subjectKey = new Key(Hashes.SHA256(Encoding.UTF8.GetBytes(subjectName)));
@@ -181,6 +181,16 @@ namespace TrustbuildTest.Workflow
         [Test]
         public void BuildTorrentWorkflowTest()
         {
+
+            // Setup
+            var manager = new TrustBuildManager();
+            var trust1 = manager.AddNew(JsonConvert.SerializeObject(CreateATrust("issuer1", "subject1")));
+            var trust2 = manager.AddNew(JsonConvert.SerializeObject(CreateATrust("issuer2", "subject2")));
+            var trust3 = manager.AddNew(JsonConvert.SerializeObject(CreateATrust("issuer3", "subject3")));
+
+
+            // Execute
+
         }
     }
 }

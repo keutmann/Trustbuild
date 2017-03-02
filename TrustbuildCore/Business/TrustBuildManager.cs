@@ -38,8 +38,9 @@ namespace TrustbuildCore.Business
 
         public void AddToDatabase(TrustModel trust)
         {
-            var dbname = GetCurrentDBTrustname(trust.Server.Id);
-            var fullpath = Path.Combine(App.Config["buildpath"].ToStringValue(), dbname);
+            trust.DatabaseName = GetCurrentDBTrustname(trust.Server.Id);
+
+            var fullpath = Path.Combine(AppDirectory.BuildPath, trust.DatabaseName);
 
             using (var db = TrustchainDatabase.Open(fullpath))
             {

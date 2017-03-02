@@ -17,6 +17,8 @@ namespace TrustbuildCore.Workflow
             // Remove indexs?
 
             // Compact file
+            GC.Collect(); // Make sure that the file is not locked
+
             using (var db = TrustchainDatabase.Open(Package.Filename))
             {
                 db.Vacuum();

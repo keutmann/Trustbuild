@@ -67,17 +67,17 @@ namespace TrustbuildTest.Data
         //    Assert.IsTrue(result.Count == 0);
         //}
 
-        [Test]
-        public void VerfifyTrustSignature()
-        {
-            var trust = TrustManager.Deserialize(TrustSimple.JSON);
-            Assert.IsTrue(trust != null);
+        //[Test]
+        //public void VerfifyTrustSignature()
+        //{
+        //    var trust = TrustManager.Deserialize(TrustSimple.JSON);
+        //    Assert.IsTrue(trust != null);
 
-            var trustBinary = new TrustBinary(trust);
-            var ecdsaSignature = new TrustECDSASignature(trust);
-            var result = ecdsaSignature.VerifyTrustSignature();
+        //    var trustBinary = new TrustBinary(trust);
+        //    var ecdsaSignature = new TrustECDSASignature(trust);
+        //    var result = ecdsaSignature.VerifyTrustSignature();
 
-            Assert.IsTrue(result.Count == 0);
-        }
+        //    Assert.IsTrue(result.Count == 0);
+        //}
     }
 }

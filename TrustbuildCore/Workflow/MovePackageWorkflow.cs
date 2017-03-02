@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using TrustbuildCore.Service;
+using TrustchainCore.Business;
 using TrustchainCore.Extensions;
 using TrustchainCore.Workflow;
 
@@ -11,10 +13,13 @@ namespace TrustbuildCore.Workflow
         public override void Execute()
         {
             // Move to library
-            var librarypath = App.Config["librarypath"].ToStringValue();
+            var librarypath = Path.Combine(AppDirectory.LibraryPath, Package.Filename);
 
-            File.Move(Package.Filename, librarypath);
+            GC.Collect(); // Release old connections, to make sure that the file is not locked
+            
+            File.Move(Package.FilePath, librarypath);
 
+            Package.FilePath = librarypath;
             Context.Enqueue(typeof(SuccessWorkflow));
         }
 

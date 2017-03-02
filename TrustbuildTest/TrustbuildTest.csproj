@@ -63,6 +63,7 @@
     <Compile Include="TestBloomfilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestDBjson.cs" />
+    <Compile Include="Workflow\WorkflowPackageTest.cs" />
     <Compile Include="Workflow\WorkflowTest.cs" />
     <Compile Include="Workflow\WorkflowContextTest.cs" />
   </ItemGroup>
