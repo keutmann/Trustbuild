@@ -13,6 +13,7 @@ using TrustbuildCore.Service;
 using TrustbuildCore.Workflow;
 using TrustchainCore.Business;
 using TrustchainCore.Data;
+using TrustchainCore.Model;
 
 namespace TrustbuildTest.Workflow
 {
@@ -104,6 +105,53 @@ namespace TrustbuildTest.Workflow
 
             var torrentFile = Path.Combine(AppDirectory.TorrentPath,  wf.Package.Filename.Replace(".trust", ".torrent"));
             Assert.IsTrue(File.Exists(torrentFile));
+        }
+
+
+        [Test]
+        public void PerformanceWorkflowTest()
+        {
+            // Setup
+            var manager = new TrustBuildManager();
+            manager.Timestamp = new DateTime(2017, 2, 4);
+
+            var length = 1000;
+            var list = new List<TrustModel>();
+            var tasks = new List<Task>();
+
+            var dbPath = Path.Combine(AppDirectory.BuildPath, manager.GetCurrentDBTrustname(ServerIdentity.Current.Address.ToBytes()));
+            if (File.Exists(dbPath))
+                File.Delete(dbPath);
+
+            //for (int i = 0; i < length; i++)
+            //{
+            //    var t = Task.Run(() =>
+            //    {
+            //        list.Add(manager.AddNew(JsonConvert.SerializeObject(WorkflowTest.CreateATrust("issuer" + i, "subject" + i))));
+            //    });
+
+            //    t.Wait();
+            //}
+
+            //Task.WaitAll(tasks.ToArray());
+
+
+            Parallel.For(0, length, (i) =>
+            {
+                list.Add(manager.AddNew(JsonConvert.SerializeObject(WorkflowTest.CreateATrust("issuer" + i, "subject" + i))));
+            });
+
+
+
+            // Verify
+            using (var db = TrustchainDatabase.Open(dbPath)) // Using in memory db.
+            {
+                var trusts = db.Trust.Select();
+                Console.WriteLine("Trusts : "+trusts.Count());
+                Console.WriteLine("List : " + list.Count());
+
+                Assert.AreEqual(trusts.Count(), list.Count);
+            }
         }
     }
 }
