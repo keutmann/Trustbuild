@@ -26,7 +26,7 @@ namespace TrustbuildCore.Workflow
             Context.Log("Merkle build of trust started");
             Context.Update();
 
-            using (var db = TrustchainDatabase.Open(Package.Filename))
+            using (var db = TrustchainDatabase.Open(Package.FilePath))
             {
                 var leafNodes = new List<MerkleNodeModel>();
                 var trusts = db.Trust.Select();
@@ -56,7 +56,9 @@ namespace TrustbuildCore.Workflow
             }
 
             Context.Log("Merkle build of trust done");
-            Context.Enqueue(typeof(TimeStampAddWorkflow));
+
+            //Context.Enqueue(typeof(TimeStampAddWorkflow)); // Disabled for testing purposes
+            Context.Enqueue(typeof(VacuumPackageWorkflow));
         }
     }
 }

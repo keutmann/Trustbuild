@@ -17,7 +17,7 @@ namespace TrustbuildCore.Workflow
         {
             var name = Package.TimestampName;
 
-            using (var db = TrustchainDatabase.Open(Package.Filename))
+            using (var db = TrustchainDatabase.Open(Package.FilePath))
             {
 
                 var trusts = db.Trust.Select();

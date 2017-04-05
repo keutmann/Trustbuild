@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TrustchainCore.Business;
 using TrustchainCore.Data;
 using TrustchainCore.Workflow;
 
@@ -26,11 +27,11 @@ namespace TrustbuildCore.Workflow
         {
         }
 
-        public static WorkflowContext Create(string filename) 
+        public static WorkflowContext Create(string file) 
         {
             var Package = new PackageContext();
             // Load db file
-            using (var db = TrustchainDatabase.Open(filename))
+            using (var db = TrustchainDatabase.Open(file))
             {
                 var json = db.KeyValue.Get("state");
                 if (json != null)
@@ -40,10 +41,13 @@ namespace TrustbuildCore.Workflow
                     Package.Status = WorkflowStatus.Running;
 
                 if (string.IsNullOrEmpty(Package.Filename))
-                    Package.Filename = filename;
+                {
+                    Package.Filename = new FileInfo(file).Name;
+                    Package.FilePath = file;
+                }
 
                 if (Package.WorkflowQueue.Count == 0)
-                    Package.Enqueue(typeof(ServerSignWorkflow));
+                    Package.Enqueue(typeof(ServerSignTrustWorkflow));
 
                 Package.Update();
             }
@@ -58,10 +62,10 @@ namespace TrustbuildCore.Workflow
 
         public override void Update()
         {
-            if (!File.Exists(Filename))
+            if (!File.Exists(FilePath))
                 return;
 
-            using (var db = TrustchainDatabase.Open(Filename))
+            using (var db = TrustchainDatabase.Open(FilePath))
             {
                 db.KeyValue.Put("state", JsonConvert.SerializeObject(this));
             }

@@ -87,7 +87,7 @@ namespace TrustbuildTest.Workflow
             trust = manager.AddNew(JsonConvert.SerializeObject(trust));
 
             // Execute
-            var wf = new ServerSignWorkflow();
+            var wf = new ServerSignTrustWorkflow();
             wf.Context = new PackageContext();
 
             Assert.IsTrue(wf.Initialize());

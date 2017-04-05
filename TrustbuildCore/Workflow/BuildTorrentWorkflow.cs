@@ -14,7 +14,8 @@ namespace TrustbuildCore.Workflow
             GC.Collect(); // Release old connections, to make sure that the file is not locked
 
             //var name = new FileInfo(Package.Filename).Name;
-            var savePath = Path.Combine(AppDirectory.TorrentPath, Package.Filename).Replace(".trust", ".torrent");
+            var tp = AppDirectory.TorrentPath;
+            var savePath = Path.Combine(tp, Package.Filename).Replace(".db", ".torrent");
             CreateTorrent(Package.FilePath, savePath);
 
             Context.Log("Package torrent created");

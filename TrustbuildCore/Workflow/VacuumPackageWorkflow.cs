@@ -19,7 +19,7 @@ namespace TrustbuildCore.Workflow
             // Compact file
             GC.Collect(); // Make sure that the file is not locked
 
-            using (var db = TrustchainDatabase.Open(Package.Filename))
+            using (var db = TrustchainDatabase.Open(Package.FilePath))
             {
                 db.Vacuum();
             }

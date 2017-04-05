@@ -57,6 +57,7 @@
     <Compile Include="Data\TrustProofTest.cs" />
     <Compile Include="Data\SubjectTableTest.cs" />
     <Compile Include="Data\TrustTableTest.cs" />
+    <Compile Include="Package\PackageTest.cs" />
     <Compile Include="Resources\TrustSimple.cs" />
     <Compile Include="SetupFixture.cs" />
     <Compile Include="BuildTest.cs" />

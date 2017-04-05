@@ -18,7 +18,11 @@ namespace TrustbuildCore.Business
         public TrustModel AddNew(string content)
         {
             var trust = JsonConvert.DeserializeObject<TrustModel>(content);
+            return AddNew(trust);
+        }
 
+        public TrustModel AddNew(TrustModel trust)
+        {
             EnsureTrustId(trust, new TrustBinary(trust));
 
             VerifyTrust(trust);
@@ -58,7 +62,7 @@ namespace TrustbuildCore.Business
         {
             var key = new KeyId(serverid);
             var preName = key.GetAddress(App.BitcoinNetwork).ToWif();
-            return string.Format("{0}_{1}.trust", preName, DefaultPartition());
+            return string.Format("{0}_{1}.db", preName, DefaultPartition());
         }
 
         public string DefaultPartition()

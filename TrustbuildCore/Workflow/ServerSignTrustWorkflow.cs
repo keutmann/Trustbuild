@@ -10,14 +10,14 @@ using TrustchainCore.Workflow;
 
 namespace TrustbuildCore.Workflow
 {
-    public class ServerSignWorkflow : WorkflowPackage
+    public class ServerSignTrustWorkflow : WorkflowPackage
     {
         public override void Execute()
        {
             Context.Log("Server sign of trust started");
             Context.Update();
 
-            using (var db = TrustchainDatabase.Open(Package.Filename))
+            using (var db = TrustchainDatabase.Open(Package.FilePath))
             {
 
                 var trusts = db.Trust.SelectServerUnsigned();

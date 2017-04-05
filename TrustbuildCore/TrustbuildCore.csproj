@@ -76,10 +76,11 @@
     <Compile Include="Service\App.cs" />
     <Compile Include="Workflow\BuildTorrentWorkflow.cs" />
     <Compile Include="Workflow\MovePackageWorkflow.cs" />
+    <Compile Include="Workflow\ServerSignPackageWorkflow.cs" />
     <Compile Include="Workflow\VacuumPackageWorkflow.cs" />
     <Compile Include="Workflow\PublishPackageWorkflow.cs" />
     <Compile Include="Workflow\BuildBitcoinMerkleWorkflow.cs" />
-    <Compile Include="Workflow\ServerSignWorkflow.cs" />
+    <Compile Include="Workflow\ServerSignTrustWorkflow.cs" />
     <Compile Include="Workflow\TimeStampAddWorkflow.cs" />
     <Compile Include="Workflow\TimeStampUpdateWorkflow.cs" />
     <Compile Include="Workflow\TimeStampWaitWorkflow.cs" />
