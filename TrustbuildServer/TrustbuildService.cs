@@ -2,10 +2,12 @@
 using Newtonsoft.Json;
 using Owin;
 using System;
+using System.Net;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Web.Http;
+using TrustbuildCore.Controllers;
 using TrustbuildCore.Service;
 using TrustchainCore.Data;
 using TrustchainCore.Extensions;
@@ -27,6 +29,21 @@ namespace TrustbuildServer
         }
     }
 
+    //public sealed class UnitySingleton
+    //{
+    //    private static readonly UnityContainer instance = new UnityContainer();
+
+    //    private UnitySingleton() { }
+
+    //    public static UnityContainer Container
+    //    {
+    //        get
+    //        {
+    //            return instance;
+    //        }
+    //    }
+    //}
+
     public class TrustbuildService
     {
         private IDisposable _webApp;
@@ -38,13 +55,13 @@ namespace TrustbuildServer
 
         public void Start()
         {
-            var url = "http://" + App.Config["endpoint"].ToStringValue("localhost") + ":" + App.Config["port"].ToInteger(12701)+ "/";
-            _webApp = WebApp.Start<StartOwin>(url);
+            var ttyy = typeof(TrustController); // TO BE REMOVED! Make the Web Api find the controllers
 
-            using (var db = TrustchainDatabase.Open())
-            {
-                db.CreateIfNotExist();
-            }
+            var start = new StartOptions();
+            start.Urls.Add("http://" + App.Config["endpoint"].ToStringValue("+") + ":" + App.Config["port"].ToInteger(12601) + "/");
+            start.Urls.Add("https://" + App.Config["endpoint"].ToStringValue("+") + ":" + App.Config["sslport"].ToInteger(12701) + "/");
+
+            _webApp = WebApp.Start<StartOwin>(start);
 
             timeInMs = App.Config["processinterval"].ToInteger(timeInMs);
 
@@ -55,8 +72,11 @@ namespace TrustbuildServer
         {
             public void Configuration(IAppBuilder appBuilder)
             {
+                HttpListener listener = (HttpListener)appBuilder.Properties["System.Net.HttpListener"];
+                listener.AuthenticationSchemes = AuthenticationSchemes.Anonymous;
                 var config = new HttpConfiguration();
                 config.Formatters.Add(new BrowserJsonFormatter());
+                //config.DependencyResolver = new UnityResolver(UnitySingleton.Container);
 
                 config.Routes.MapHttpRoute(
                     name: "DefaultApi",
@@ -67,6 +87,7 @@ namespace TrustbuildServer
                 appBuilder.UseWebApi(config);
             }
         }
+
 
         private void RunTimer(Action method)
         {
