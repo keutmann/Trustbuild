@@ -37,7 +37,7 @@ namespace TrustbuildTest.Package
 
             var manager = new TrustBuildManager();
 
-            var dbPath = Path.Combine(AppDirectory.BuildPath, manager.GetCurrentDBTrustname(TrustBuilder.ServerID()));
+            var dbPath = Path.Combine(AppDirectory.BuildPath, manager.GetCurrentDBTrustname());
             // Clean up first
             if (File.Exists(dbPath))
                 File.Delete(dbPath);

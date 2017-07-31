@@ -35,14 +35,12 @@ namespace TrustbuildCore.Business
             return trust;
         }
 
-        //public TrustModel AddNew(TrustModel trust)
-        //{
-
-        //}
-
+        
         public void AddToDatabase(TrustModel trust)
         {
-            trust.DatabaseName = GetCurrentDBTrustname(trust.Server.Id);
+            
+
+            trust.DatabaseName = GetCurrentDBTrustname();
 
             var fullpath = Path.Combine(AppDirectory.BuildPath, trust.DatabaseName);
 
@@ -58,10 +56,19 @@ namespace TrustbuildCore.Business
             }
         }
 
-        public string GetCurrentDBTrustname(byte[] serverid)
+        public static void EnsureServerId(TrustModel trust)
         {
-            var key = new KeyId(serverid);
-            var preName = key.GetAddress(App.BitcoinNetwork).ToWif();
+            if (trust.Server != null && trust.Server.Id.Length > 0)
+                return;
+
+            trust.Server = new ServerModel();
+            trust.Server.Id = ServerIdentity.Current.Address.Hash.ToBytes();
+        }
+
+
+        public string GetCurrentDBTrustname()
+        {
+            var preName = ServerIdentity.Current.Address.ToWif();
             return string.Format("{0}_{1}.db", preName, DefaultPartition());
         }
 

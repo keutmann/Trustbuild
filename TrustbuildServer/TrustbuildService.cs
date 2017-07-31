@@ -14,36 +14,6 @@ using TrustchainCore.Extensions;
 
 namespace TrustbuildServer
 {
-    public class BrowserJsonFormatter : JsonMediaTypeFormatter
-    {
-        public BrowserJsonFormatter()
-        {
-            this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
-            this.SerializerSettings.Formatting = Formatting.Indented;
-        }
-
-        public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
-        {
-            base.SetDefaultContentHeaders(type, headers, mediaType);
-            headers.ContentType = new MediaTypeHeaderValue("application/json");
-        }
-    }
-
-    //public sealed class UnitySingleton
-    //{
-    //    private static readonly UnityContainer instance = new UnityContainer();
-
-    //    private UnitySingleton() { }
-
-    //    public static UnityContainer Container
-    //    {
-    //        get
-    //        {
-    //            return instance;
-    //        }
-    //    }
-    //}
-
     public class TrustbuildService
     {
         private IDisposable _webApp;

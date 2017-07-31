@@ -17,8 +17,7 @@ namespace TrustbuildTest.Resources
   ""issuer"": {
       ""id"": ""z9+7gcKC3nbtUDd3r45Sr60nkS8="",
       ""signature"" : ""H+ybXlrtsk5Pm+TbccEky/3FR2bWWsBVUlI7RdZGicEPTI32pUFN30RGNiU9U3I1uXpMTSeKy8krgSfHdvxMnzA="",
-      ""subject"": [
-        {
+      ""subject"": [{
           ""idtype"": ""person"", 
           ""id"": ""VGhpcyBpcyBhIGN1c3RvbSBhZGRyZXNz"", 
           ""claim"": {
@@ -49,5 +48,41 @@ namespace TrustbuildTest.Resources
   }
 }
 ";
+        // Target "trustid": "fW32dXWOOp+P0rwslWs5H4gSpTkp6+anA9NECxkmZHo="
+        public static string ClientJSON = @"
+{
+	""head"": {
+		""version"": ""standard 0.1.0"",
+		""script"": ""btc-pkh""
+	},
+	""issuer"": {
+		""id"": ""RzUTJlQoHLzgtXjKiBx4+QAg1aQ="",
+		""signature"": ""IP34/ye5vo+Wc4JrsseoLVLWy8kVorq7duVQgAYpF1+OYKWVXwySz1kDwbvO5ZthDlEmjAgB8KFNGPVK00K/5Zc="",
+		""subject"": [{
+			""id"": ""RzUTJlQoHLzgtXjKiBx4+QAg1aQ="",
+			""idtype"": ""identity"",
+			""scope"": ""reddit"",
+			""claim"": {
+				""trust"": ""true""
+			},
+			""cost"": 100,
+			""activate"": 0,
+			""expire"": 0
+		}, {
+			""id"": ""K2c618oiqO547JJ9bWs6lsKFWCI="",
+			""idtype"": ""name"",
+			""scope"": ""reddit"",
+			""claim"": {
+				""trust"": ""true""
+			},
+			""cost"": 100,
+			""activate"": 0,
+			""expire"": 0
+		}]
+	},
+	
+}
+";
+
     }
 }

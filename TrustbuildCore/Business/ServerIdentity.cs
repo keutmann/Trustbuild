@@ -1,4 +1,6 @@
-﻿using NBitcoin;
+﻿
+using NBitcoin;
+using NBitcoin.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +16,25 @@ namespace TrustbuildCore.Business
         public BitcoinPubKeyAddress Address { get; set; }
 
 
-        private ServerIdentity() : this(App.Config["serverwif"].ToString(), App.BitcoinNetwork)
+        //private ServerIdentity() : this(App.Config["serverwif"].ToString(), App.BitcoinNetwork)
+        private ServerIdentity() : this("", App.BitcoinNetwork)
         {
 
         }
 
         public ServerIdentity(string wif, Network network)
         {
-            PrivateKey = Key.Parse(wif, network);
-            Address = PrivateKey.PubKey.GetAddress(App.BitcoinNetwork);
+            Key key = null;
+            if (string.IsNullOrEmpty(wif))
+            {
+                key = new Key(Hashes.Hash256(Encoding.UTF8.GetBytes(Environment.MachineName)).ToBytes());
+                App.Config["serverwif"] = key.GetBitcoinSecret(network).ToWif();
+            }
+            else
+            {
+                key = Key.Parse(wif, network);
+            }
+            Address = key.PubKey.GetAddress(App.BitcoinNetwork);
         }
 
         public static ServerIdentity Current { get { return Nested.instance; } }

@@ -1,9 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using NBitcoin;
+using NBitcoin.Crypto;
+using NBitcoin.DataEncoders;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
+using System;
+using System.Linq;
+using System.Text;
+using TrustbuildTest.Resources;
+using TrustchainCore.Business;
 using TrustchainCore.Data;
 using TrustchainCore.Model;
 using TrustchainCore.Service;
+using TrustchainCore.Extensions;
 
 namespace TrustbuildTest
 {
@@ -15,81 +24,38 @@ namespace TrustbuildTest
         public void TestJSON()
         {
 
-            var json = @"{ ""head"":{ ""version"":""standard 0.1.0"",""script"":""btc-pkh""},""issuer"":[{""id"":""RzUTJlQoHLzgtXjKiBx4+QAg1aQ="",""signature"":""MEQCICKPVHZv+MfbARVG4jQMswliTms4FHlQz2lYZssGiF+NAiB0/mLZwl6xJfpFCCdsOWiScqZLODgXisST3pwfQN6qIg=="",""subject"":[{""id"":""RzUTJlQoHLzgtXjKiBx4+QAg1aQ="",""idtype"":""identity"",""scope"":""reddit"",""claim"":{""trust"":true},""cost"":100,""activate"":0,""expire"":0},{""id"":""K2c618oiqO547JJ9bWs6lsKFWCI="",""idtype"":""name"",""scope"":""reddit"",""claim"":{""trust"":true},""cost"":100,""activate"":0,""expire"":0}]}]}";
+            
+            var trust = JsonConvert.DeserializeObject<TrustModel>(TrustSimple.ClientJSON);
 
-            var obj = JsonConvert.DeserializeObject<TrustModel>(json);
+            //TrustManager.EnsureTrustId(trust, new TrustBinary(trust));
+            trust.TrustId = Hashes.Hash256(Encoding.UTF8.GetBytes("Demo")).ToBytes();
 
-            Assert.NotNull(obj);
-            //using (var db = TrustchainDatabase.Open())
-            //{
-            //var itemsCount = 20000;
-            //var name = "Carsten";
-            ////var data = new JArray();
-            //using (var timer = new TimeMe("Add data"))
-            //{
+            Console.WriteLine("Hash Value: "+Encoders.Base64.EncodeData(trust.TrustId));
 
+            var serverKey = new Key(Hashes.Hash256(Encoding.UTF8.GetBytes("server")).ToBytes());
+            Console.WriteLine("server key: " + serverKey.GetBitcoinSecret(Network.Main).ToWif());
+            var adr = serverKey.ScriptPubKey.GetDestinationAddress(Network.Main);
+            Console.WriteLine("server Adr: "+adr.ToWif());
+            trust.Issuer.Id = serverKey.ScriptPubKey.GetDestinationAddress(Network.Main).ToBytes();
+            Console.WriteLine("TrustID: " + Encoders.Base64.EncodeData(trust.TrustId));
+            var sig = TrustECDSASignature.SignMessage(serverKey, trust.TrustId);
+            trust.Issuer.Signature = sig;
+            Console.WriteLine("Server Signature: " + Encoders.Base64.EncodeData(sig));
 
-            //    for (int i = 0; i < itemsCount; i++)
-            //    {
-            //        var key = name + i;
-            //        var data = new JObject(
-            //                 new JProperty("id", i),
-            //                 new JProperty("name", key),
-            //                 new JProperty("phone", "1234455454"),
-            //                 new JProperty("subname",new JArray(
-            //                     new JObject(new JProperty("nick", "Test" + i)),
-            //                     new JObject(new JProperty("nick", "Hans" + i)),
-            //                     new JObject(new JProperty("nick", "Oles" + i))
-            //                     )
-            //                 )
-            //             );
+            var signature = new TrustECDSASignature(trust);
+            
+            var manager = new TrustManager();
 
-            //        db.Trust.Add(key, data);
-            //    }
-            //}
+             manager.VerifyTrust(trust);
+             Assert.NotNull(trust);
 
-            //using (var timer = new TimeMe("Sub JSON search"))
-            //{
-            //    var count = 0;
+            Console.WriteLine("Client Address: 1PoRUSi6cZfmX5CbiB4qo4VFA6D12byofu");
 
-            //    for (int i = 0; i < itemsCount; i++)
-            //    {
-            //        var result2 = db.Trust.SelectSubJSON("Test" + i);
-            //        count++;
-            //    }
-            //    Console.WriteLine("Number of selects: " + count);
-            //}
-
-
-            //using (var timer = new TimeMe("JSON search"))
-            //{
-            //    var count = 0;
-
-            //    for (int i = 0; i < itemsCount; i ++)
-            //    {
-            //        var result2 = db.Trust.SelectJSON("Carsten" + i);
-            //        count++;
-            //    }
-            //    Console.WriteLine("Number of selects: " + count);
-            //}
-
-            //using (var timer = new TimeMe("SQL search"))
-            //{
-            //    var count = 0;
-
-            //    for (int i = 0; i < itemsCount; i ++)
-            //    {
-            //        var result2 = db.Trust.SelectSQL("Carsten" + i);
-            //        count++;
-            //    }
-            //    Console.WriteLine("Number of selects: " + count);
-            //}
-
-
-            //Assert.NotNull(result2);
-            //Assert.IsTrue(result.Count == data.Count);
-            //}
-
+            //Console.WriteLine("Client Private key: L2ULKExrzucfUED4vaoezawAEEgAAXtHLLGmFi8k6JKBw4iuFpdG");
+            //Console.WriteLine("Client Hash value: S3mtngHqVQD0NzP4URKqLLM9wWeBfRenzlqhEZ5zoC8=");
+            //Console.WriteLine("Client Message: yyFz7Hj+P6s1qvzReaxBzkrrNJs70mI5MatXp3VWvos=");
+            //Console.WriteLine("Client Pre HEX: 44656d6f");
+            //Console.WriteLine("CLient Signature: H+IT0mBp6Ddlak67LeBV83mC3kKTB5uTULa//+mdQIbwZf2tNgSgnVVxEsd9B8KKVf9tO0/ebYyPzFazS8SPRaI=");
         }
     }
 }

@@ -119,7 +119,7 @@ namespace TrustbuildTest.Workflow
             var list = new List<TrustModel>();
             var tasks = new List<Task>();
 
-            var dbPath = Path.Combine(AppDirectory.BuildPath, manager.GetCurrentDBTrustname(ServerIdentity.Current.Address.ToBytes()));
+            var dbPath = Path.Combine(AppDirectory.BuildPath, manager.GetCurrentDBTrustname());
             if (File.Exists(dbPath))
                 File.Delete(dbPath);
 
