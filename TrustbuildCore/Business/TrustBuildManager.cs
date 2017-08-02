@@ -11,7 +11,7 @@ using System.IO;
 
 namespace TrustbuildCore.Business
 {
-    public class TrustBuildManager : TrustManager
+    public class TrustBuildManager : TrustManager, ITrustBuildManager
     {
         public DateTime Timestamp = DateTime.Now;
 
@@ -19,6 +19,14 @@ namespace TrustbuildCore.Business
         {
             var trust = JsonConvert.DeserializeObject<TrustModel>(content);
             return AddNew(trust);
+        }
+
+        public void Add(PackageModel package)
+        {
+            foreach (var trust in package.Trust)
+            {
+                AddNew(trust);
+            }
         }
 
         public TrustModel AddNew(TrustModel trust)

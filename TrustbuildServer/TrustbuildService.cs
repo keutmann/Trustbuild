@@ -5,12 +5,14 @@ using System;
 using System.Net;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Threading;
 using System.Web.Http;
 using TrustbuildCore.Controllers;
 using TrustbuildCore.Service;
 using TrustchainCore.Data;
 using TrustchainCore.Extensions;
+using TrustchainCore.IOC;
 
 namespace TrustbuildServer
 {
@@ -25,7 +27,11 @@ namespace TrustbuildServer
 
         public void Start()
         {
-            var ttyy = typeof(TrustController); // TO BE REMOVED! Make the Web Api find the controllers
+            var asm = new Assembly[] { typeof(IOCAttribute).Assembly };
+            UnitySingleton.Container.RegisterTypesFromAssemblies(asm);
+
+            var core = new Assembly[] { typeof(TrustController).Assembly };
+            UnitySingleton.Container.RegisterTypesFromAssemblies(core);
 
             var start = new StartOptions();
             start.Urls.Add("http://" + App.Config["endpoint"].ToStringValue("+") + ":" + App.Config["port"].ToInteger(12601) + "/");
@@ -58,6 +64,23 @@ namespace TrustbuildServer
             }
         }
 
+        public void Configuration(IAppBuilder appBuilder)
+        {
+            HttpListener listener = (HttpListener)appBuilder.Properties["System.Net.HttpListener"];
+            listener.AuthenticationSchemes = AuthenticationSchemes.Anonymous;
+
+            var config = new HttpConfiguration();
+            config.Formatters.Add(new BrowserJsonFormatter());
+            config.DependencyResolver = new UnityResolver(UnitySingleton.Container);
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+                );
+
+            appBuilder.UseWebApi(config);
+        }
 
         private void RunTimer(Action method)
         {

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
 using TrustbuildCore.Business;
+using TrustchainCore.Model;
 
 namespace TrustbuildCore.Controllers
 {
@@ -10,23 +12,27 @@ namespace TrustbuildCore.Controllers
     {
         public const string Path = "/api/trust/";
 
+        private ITrustBuildManager buildManager;
+
+        public TrustController()
+        {
+            buildManager = new TrustBuildManager();
+        }
+
         [HttpGet]
         public IHttpActionResult Get()
         {
-            return Ok("OK");
+            return Ok(new { status = "succes" });
         }
 
         [HttpPost]
-        public IHttpActionResult Add(HttpRequestMessage requrest)
+        public IHttpActionResult Add([FromBody]PackageModel package)
         {
             try
             {
-                var id = requrest.Content.ReadAsStringAsync().Result;
-                var manager = new TrustBuildManager();
+                buildManager.Add(package);
 
-                manager.AddNew(id);
-
-                return Ok();
+                return Ok(new { status= "succes" });
             }
             catch (Exception ex)
             {

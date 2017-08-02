@@ -16,7 +16,7 @@ namespace TrustbuildCore.Service
         private static void SetupConfig()
         {
             Config["endpoint"] = IPAddress.Loopback.ToString();
-            Config["port"] = 12701;
+            Config["port"] = 12601;
             Config["eventlog"] = !Environment.UserInteractive; // Activate event logger if no console is active.
             Config["test"] = false; // General test, no real data is stored, run in memory database!
             Config["partition"] = "yyyyMMddhh0000"; // Create a new batch every hour.
