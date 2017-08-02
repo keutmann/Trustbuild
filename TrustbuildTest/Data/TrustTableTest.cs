@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,7 +70,7 @@ namespace TrustbuildTest.Data
                         Assert.IsNotNull(test, "count: "+count);
                     }
                 }
-                Console.WriteLine("MemoryUsed: " + db.Connection.MemoryUsed);
+                Trace.TraceInformation("MemoryUsed: " + db.Connection.MemoryUsed);
 
             }
         }

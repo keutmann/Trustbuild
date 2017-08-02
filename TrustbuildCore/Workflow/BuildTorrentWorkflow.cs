@@ -46,9 +46,9 @@ namespace TrustbuildCore.Workflow
             // asynchronous event, so you have to handle threading yourself.
             c.Hashed += delegate (object o, TorrentCreatorEventArgs e)
             {
-                //Console.WriteLine("Current File is {0}% hashed", e.FileCompletion);
-                //Console.WriteLine("Overall {0}% hashed", e.OverallCompletion);
-                //Console.WriteLine("Total data to hash: {0}", e.OverallSize);
+                //Trace.TraceInformation("Current File is {0}% hashed", e.FileCompletion);
+                //Trace.TraceInformation("Overall {0}% hashed", e.OverallCompletion);
+                //Trace.TraceInformation("Total data to hash: {0}", e.OverallSize);
             };
 
             //c.SetCustom("Tove", "Hans");

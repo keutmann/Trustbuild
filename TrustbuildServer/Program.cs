@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Topshelf;
 using TrustbuildCore.Service;
 using TrustchainCore.Business;
-using TrustchainCore.Extensions;
 
 namespace TrustbuildServer
 {
@@ -21,7 +21,7 @@ namespace TrustbuildServer
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                Trace.TraceError(ex.Message);
                 return -1;
             }
         }
@@ -29,8 +29,7 @@ namespace TrustbuildServer
         private static int Setup()
         {
             App.LoadConfigFile("config.json");
-            if (App.Config["eventlog"].ToBoolean() == true)
-                App.EnableEventLogger();
+            App.InitializeLogging();
 
             // Ensure AppData directories
             AppDirectory.Setup();

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -57,7 +58,7 @@ namespace TrustbuildCore.Workflow
         public override void Log(string message)
         {
             base.Log(message);
-            Console.WriteLine(message);
+            Trace.TraceInformation(message);
         }
 
         public override void Update()

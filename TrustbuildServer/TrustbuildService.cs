@@ -1,18 +1,16 @@
 ﻿using Microsoft.Owin.Hosting;
-using Newtonsoft.Json;
 using Owin;
 using System;
 using System.Net;
-using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Threading;
 using System.Web.Http;
 using TrustbuildCore.Controllers;
 using TrustbuildCore.Service;
-using TrustchainCore.Data;
 using TrustchainCore.Extensions;
 using TrustchainCore.IOC;
+using System.Diagnostics;
+
 
 namespace TrustbuildServer
 {
@@ -96,7 +94,7 @@ namespace TrustbuildServer
                 }
                 catch (Exception ex)
                 {
-                    Console.Error.WriteLine(ex.Message);
+                    Trace.TraceError(ex.Message);
                 }
                 finally
                 {
@@ -111,7 +109,7 @@ namespace TrustbuildServer
 
         public void Execute()
         {
-            Console.WriteLine(DateTime.Now.ToLocalTime() + " : Processing...");
+            Trace.TraceInformation(DateTime.Now.ToLocalTime() + " : Processing...");
         }
 
         public void Pause()
